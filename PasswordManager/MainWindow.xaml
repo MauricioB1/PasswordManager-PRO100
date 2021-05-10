@@ -5,7 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PasswordManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Pasword Manager" Height="450" Width="800"
+        MaxHeight="450" MaxWidth="800"
+        MinHeight="450" MinWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -16,7 +18,7 @@
         </Grid.RowDefinitions>
         
         <!--!The username entry-->
-        <!--todo store the username-->
+        <!--x store the username-->
         <TextBlock Text="Username" Grid.Row="0" 
                    Margin="350 50 350 125"
                    TextAlignment="Center"/>
@@ -28,7 +30,7 @@
         
 
         <!--!The password entry-->
-        <!--todo store the password-->
+        <!--xtodo store the password-->
         <TextBlock Text="Password" Grid.Row="1" 
                    Margin="350 25 350 150"
                    TextAlignment="Center"/>
@@ -36,6 +38,7 @@
         <TextBox x:Name="passwordInput" Grid.Row="1"
                  Margin="350 75 350 100"/>
 
+        <!--!The button that collects everything-->
         <Button x:Name="infoBut"
                 Content="Enter"
                 Grid.Row="1"
