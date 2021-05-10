@@ -20,9 +20,26 @@ namespace PasswordManager
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        #region Properties
+
+        private string UserName { get; set; }
+
+        private string Password { get; set; }
+
+        #endregion Properties
+
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void InfoBut_Click(object sender, RoutedEventArgs e)
+        {
+            UserName = usernameInput.Text;
+
+            Password = passwordInput.Text;
         }
     }
 }
