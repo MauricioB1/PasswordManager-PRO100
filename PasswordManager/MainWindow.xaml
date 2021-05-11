@@ -9,6 +9,7 @@
         MaxHeight="450" MaxWidth="800"
         MinHeight="450" MinWidth="800">
     <Grid>
+<<<<<<< HEAD
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
@@ -37,6 +38,25 @@
                                Margin="0,-100,0,10" Height="22"/>
                 </StackPanel>
             </StackPanel>
+=======
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+
+        </Grid.ColumnDefinitions>
+
+        
+        <!--!Column 1-->
+        
+        <!--!The login username entry-->
+        <!--x store the username-->
+        <TextBlock Text="Username" 
+                   Margin="300 50 300 325"
+                   TextAlignment="Center"/>
+
+        
+        <TextBox x:Name="usernameInput" 
+                 Margin="300 75 300 315"/>
+>>>>>>> c32b838ebe83ba7ae6aa73f527e81204911793b2
 
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
                 <Image Source="Images/lock.jpg" Width="85"/>
@@ -47,6 +67,7 @@
                            Margin="0,10,0,0"/>
             </StackPanel>
 
+<<<<<<< HEAD
             <!--!The button that collects everything-->
             <Button x:Name="infoBut"
                 Content="Enter"
@@ -55,6 +76,34 @@
                 Grid.Row="1"
                 Margin="300 200 300 40"
                 Click="Login_Click"/>
+=======
+        <!--!The login password entry-->
+        <!--xtodo store the password-->
+        <TextBlock Text="Password" 
+                   Margin="300 125 300 275"
+                   TextAlignment="Center"/>
+
+        <TextBox x:Name="passwordInput" 
+                 Margin="300 150 300 240"/>
+
+        <!--!The button that collects everything for login-->
+        <Button x:Name="loginInfoBut"
+                Content="Login"
+                Margin="200 225 450 160"
+                Click="loginInfoBut_Click"/>
+
+        <!--!Column 1-->
+        
+        
+
+        <!--!The button that collects everything for login-->
+        <Button x:Name="signUpInfoBut"
+                Content="Sign Up"
+                Margin="450 225 200 160"
+                Click="signUpInfoBut_Click"/>
+
+        <!--!Column 2-->
+>>>>>>> c32b838ebe83ba7ae6aa73f527e81204911793b2
 
         </Grid>
     </Grid>
