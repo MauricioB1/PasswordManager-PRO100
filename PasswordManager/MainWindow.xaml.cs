@@ -32,7 +32,7 @@ namespace PasswordManager
 
         public MainWindow()
         {
-            InitializeComponent(); 
+            InitializeComponent();
         }
 
         private string GeneratePassword()
@@ -70,11 +70,24 @@ namespace PasswordManager
             return builder.ToString();
         }
 
-        private void InfoBut_Click(object sender, RoutedEventArgs e)
+        private void Login_Click(object sender, RoutedEventArgs e)
         {
             UserName = usernameInput.Text;
-
             Password = passwordInput.Text;
+
+            if (!(string.IsNullOrEmpty(UserName) && string.IsNullOrWhiteSpace(UserName)) && !(string.IsNullOrEmpty(Password) && string.IsNullOrWhiteSpace(Password)))
+            {
+                /*Check database for a matching username
+                //PasswordDB.Users.find( { username: usernameInput.Text } );
+                    If found, check if the password matches
+                        //PasswordDB.Users.find( { username: usernameInput.Text, password: passwordInput.Text } );
+                        If it does, successful log in
+                        else, incorrect password
+                            MessageBox.Show("Incorrect Password.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
+                else username not found; prompt for new user creation
+                */
+                MessageBox.Show("The user does not exist. Please create user.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }
