@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Newtonsoft;
+using Newtonsoft.Json;
 
 namespace PasswordManager
 {
@@ -70,11 +73,52 @@ namespace PasswordManager
             return builder.ToString();
         }
 
-        private void InfoBut_Click(object sender, RoutedEventArgs e)
+        private void loginInfoBut_Click(object sender, RoutedEventArgs e)
         {
             UserName = usernameInput.Text;
 
             Password = passwordInput.Text;
         }
+
+        private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
+        {
+            UserName = usernameInput.Text;
+
+            Password = passwordInput.Text;
+
+            saveUserInfo();
+        }
+
+        //This saves the user info using the User class, serializes it to Json and it saves it to a specified file
+        //This will change to save it to MongoDB
+        private void saveUserInfo()
+        {      
+
+            User newUser = new User();
+
+            Entry newEntry = new Entry("Josh", "JoshIsCool123", "PandaExpress.com");
+
+            List<Entry> newAccounts = new List<Entry>();
+
+            newAccounts.Add(newEntry);
+
+            newUser.Username = UserName;
+
+            newUser.Password = Password;
+
+            newUser.Accounts = newAccounts;
+
+            //You'd have to change the file location for now to a place you can find
+            using (StreamWriter file = File.CreateText(@"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\" + UserName + ".json"))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Serialize(file, newUser);
+            }
+
+        }
+
+
     }
+
+    
 }

@@ -10,41 +10,51 @@
         MinHeight="450" MinWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+
         </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="2*"/>
-        </Grid.RowDefinitions>
+
         
-        <!--!The username entry-->
+        <!--!Column 1-->
+        
+        <!--!The login username entry-->
         <!--x store the username-->
-        <TextBlock Text="Username" Grid.Row="0" 
-                   Margin="350 50 350 125"
+        <TextBlock Text="Username" 
+                   Margin="300 50 300 325"
                    TextAlignment="Center"/>
 
         
-        <TextBox x:Name="usernameInput" Grid.Row="0"
-                 Margin="350 100 350 75"/>
+        <TextBox x:Name="usernameInput" 
+                 Margin="300 75 300 315"/>
 
         
 
-        <!--!The password entry-->
+        <!--!The login password entry-->
         <!--xtodo store the password-->
-        <TextBlock Text="Password" Grid.Row="1" 
-                   Margin="350 25 350 150"
+        <TextBlock Text="Password" 
+                   Margin="300 125 300 275"
                    TextAlignment="Center"/>
 
-        <TextBox x:Name="passwordInput" Grid.Row="1"
-                 Margin="350 75 350 100"/>
+        <TextBox x:Name="passwordInput" 
+                 Margin="300 150 300 240"/>
 
-        <!--!The button that collects everything-->
-        <Button x:Name="infoBut"
-                Content="Enter"
-                Grid.Row="1"
-                Margin="350 150 350 25"
-                Click="InfoBut_Click"/>
+        <!--!The button that collects everything for login-->
+        <Button x:Name="loginInfoBut"
+                Content="Login"
+                Margin="200 225 450 160"
+                Click="loginInfoBut_Click"/>
 
+        <!--!Column 1-->
+        
+        
+
+        <!--!The button that collects everything for login-->
+        <Button x:Name="signUpInfoBut"
+                Content="Sign Up"
+                Margin="450 225 200 160"
+                Click="signUpInfoBut_Click"/>
+
+        <!--!Column 2-->
 
     </Grid>
 </Window>
