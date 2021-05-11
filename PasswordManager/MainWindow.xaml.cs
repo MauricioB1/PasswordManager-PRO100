@@ -73,11 +73,11 @@ namespace PasswordManager
             return builder.ToString();
         }
 
-<<<<<<< HEAD
-        private void Login_Click(object sender, RoutedEventArgs e)
-=======
+
+        private void Login_Click(object sender, RoutedEventArgs e) { }
+
         private void loginInfoBut_Click(object sender, RoutedEventArgs e)
->>>>>>> c32b838ebe83ba7ae6aa73f527e81204911793b2
+
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Text;
