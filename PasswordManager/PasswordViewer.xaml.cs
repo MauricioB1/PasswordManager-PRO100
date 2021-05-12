@@ -22,7 +22,7 @@ namespace PasswordManager
 
         #region Properties
 
-        List<Entry> entries = new List<Entry>();
+        List<AccountEntry> entries = new List<AccountEntry>();
 
         
 
@@ -36,9 +36,9 @@ namespace PasswordManager
 
         private void addEntryBut_Click(object sender, RoutedEventArgs e)
         {
-            entries.Add(new Entry(usernameInput.Text, passwordInput.Text, urlInput.Text));
+            entries.Add(new AccountEntry(usernameInput.Text, passwordInput.Text, urlInput.Text));
 
-            LstEntries.Items.Add(new Entry(usernameInput.Text, passwordInput.Text, urlInput.Text));
+            LstEntries.Items.Add(new AccountEntry(usernameInput.Text, passwordInput.Text, urlInput.Text));
         }
 
 
