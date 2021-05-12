@@ -4,14 +4,41 @@
     "Password": 1452345,
     "Accounts": [
       {
-        "url": "www.fake.com",
-        "username": "AlsoJosh",
-        "password": "asdfg"
+        "AccountUserName": "AlsoJosh",
+        "AccountPassword": "asdfg",
+        "AccountUrl": "www.fake.com"
       },
       {
-        "url": "www.anotherfake.com",
-        "username": "NotJosh",
-        "password": "NotPassword"
+        "AccountUserName": "NotJosh",
+        "AccountPassword": "NotPassword",
+        "AccountUrl": "www.anotherfake.com"
+      }
+    ]
+  },
+  {
+    "UserName": "Rob",
+    "Password": 14523455,
+    "Accounts": [
+      {
+        "AccountUserName": "AlsoJosh",
+        "AccountPassword": "asdfg",
+        "AccountUrl": "www.faksafde.com"
+      },
+      {
+        "AccountUserName": "NotJosh",
+        "AccountPassword": "NotPassword",
+        "AccountUrl": "www.anotsadfherfake.com"
+      }
+    ]
+  },
+  {
+    "UserName": "Bob",
+    "Password": 12345,
+    "Accounts": [
+      {
+        "AccountUserName": "Bob",
+        "AccountPassword": "BobIsKin",
+        "AccountUrl": "www.bobdotcom.com"
       }
     ]
   }

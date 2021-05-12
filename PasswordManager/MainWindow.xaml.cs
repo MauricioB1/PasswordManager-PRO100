@@ -106,7 +106,7 @@ namespace PasswordManager
                 */
                 //var result = collectionUser.Find(u => u.UserName == "Josh");
                 //UserName = result.ToString();
-                string path = "C:/Users/amina/OneDrive - Neumont College of Computer Science/Year 2/Spring 2021/Software Projects/Password Project/PasswordManager/Models/json1.json";
+                string path = @"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\ProjectThingy\PRO100\PasswordManager\Models\json1.json";
                 string jsonString;
                 using (var reader = new StreamReader(path))
                 {
@@ -116,6 +116,24 @@ namespace PasswordManager
                 if(jsonString.Contains($"\"UserName\": \"{UserName}\"") && jsonString.Contains($"\"Password\": {Password}"))
                 {
                     PasswordViewer passwordviewer = new PasswordViewer();
+                    var entryJson = JsonConvert.DeserializeObject<List<User>>(jsonString);
+                    User currUser = null;
+                    foreach (var c1 in entryJson)
+                    {
+                        if (c1.UserName.Equals(UserName)) 
+                        {
+                            currUser = c1;
+                            foreach (var c2 in c1.Accounts)
+                            {
+                                passwordviewer.AddEntry(c2);
+                            }
+
+                        }
+                    }
+                    passwordviewer.UsersList = entryJson;
+                    passwordviewer.CurrUser = currUser;
+                    passwordviewer.Path = path;
+                    passwordviewer.Activate();
                     passwordviewer.Show();
                     Close();
                 }else
@@ -141,16 +159,11 @@ namespace PasswordManager
 
             List<AccountEntry> newAccounts = new List<AccountEntry>();      
 
-
-            AccountEntry aE = new AccountEntry("Josh", "JoshIsAwesome123", "pandaExpress.com");
-
-            newAccounts.Add(aE);
-            newAccounts.Add(aE);
-
-            var users = JsonConvert.SerializeObject(new User {  Username= this.UserName , Password = this.Password,
+            var users = JsonConvert.SerializeObject(new User {  UserName= this.UserName , Password = int.Parse(Password),
             Accounts = newAccounts}, Formatting.Indented);
 
-            string path = @"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\Users.json";
+            //You'd have to change the file location for now to a place you can find
+            string path = @"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\ProjectThingy\PRO100\PasswordManager\Models\json1.json";
 
             string rFile;
 
@@ -169,7 +182,7 @@ namespace PasswordManager
                 Console.WriteLine("OOP");
                 rFile = "[";
             }
-            //You'd have to change the file location for now to a place you can find
+            
             using (StreamWriter file = File.CreateText(path))
             {
                 file.WriteLine(rFile + users + "]");
