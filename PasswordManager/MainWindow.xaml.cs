@@ -38,6 +38,7 @@ namespace PasswordManager
         static MongoClient client = new MongoClient();
         static IMongoDatabase db = client.GetDatabase("passwordmanager");
         static IMongoCollection<Users> collectionUser = db.GetCollection<Users>("users");
+        DataGrid dgUsers = new DataGrid();
 
         public void GetUsers()
         {
@@ -117,33 +118,43 @@ namespace PasswordManager
 
             Password = passwordInput.Text;
 
-            saveUserInfo();
+            SaveUserInfo();
         }
 
         //This saves the user info using the User class, serializes it to Json and it saves it to a specified file
         //This will change to save it to MongoDB
-        private void saveUserInfo()
-        {      
+        private void SaveUserInfo()
+        {        
 
-            User newUser = new User();
+            List<AccountEntry> newAccounts = new List<AccountEntry>();      
 
-            Entry newEntry = new Entry("Josh", "JoshIsCool123", "PandaExpress.com");
+            var users = JsonConvert.SerializeObject(new User {  Username= this.UserName , Password = this.Password,
+            Accounts = newAccounts}, Formatting.Indented);
 
-            List<Entry> newAccounts = new List<Entry>();
+            string path = @"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\Users.json";
 
-            newAccounts.Add(newEntry);
+            string rFile;
 
-            newUser.Username = UserName;
+            try
+            {
+                rFile = File.ReadAllText(path);
 
-            newUser.Password = Password;
+                rFile = rFile.Substring(0, rFile.Length - 3);
 
-            newUser.Accounts = newAccounts;
+                rFile += ",";
+
+            }
+            catch(Exception)
+            {
+                using (File.CreateText(path)) ;
+                Console.WriteLine("OOP");
+                rFile = "[";
+            }
 
             //You'd have to change the file location for now to a place you can find
-            using (StreamWriter file = File.CreateText(@"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\" + UserName + ".json"))
+            using (StreamWriter file = File.CreateText(path))
             {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, newUser);
+                file.WriteLine(rFile + users + "]");
             }
 
         }
@@ -154,4 +165,4 @@ namespace PasswordManager
     
 
     }
-}
+

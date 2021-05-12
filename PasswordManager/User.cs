@@ -13,7 +13,7 @@ namespace PasswordManager
 
         public string Password { get; set; }
 
-        public List<Entry> Accounts { get; set; }
+        public List<AccountEntry> Accounts { get; set; }
 
         //public User(string username, string password)
         //{
