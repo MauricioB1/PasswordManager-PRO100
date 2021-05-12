@@ -37,12 +37,12 @@ namespace PasswordManager
 
         static MongoClient client = new MongoClient();
         static IMongoDatabase db = client.GetDatabase("passwordmanager");
-        static IMongoCollection<Users> collectionUser = db.GetCollection<Users>("users");
+        static IMongoCollection<User> collectionUser = db.GetCollection<User>("users");
         DataGrid dgUsers = new DataGrid();
 
         public void GetUsers()
         {
-            List<Users> list = collectionUser.AsQueryable().ToList<Users>();
+            List<User> list = collectionUser.AsQueryable().ToList<User>();
             dgUsers.ItemsSource = list;
             
 
@@ -127,6 +127,12 @@ namespace PasswordManager
         {        
 
             List<AccountEntry> newAccounts = new List<AccountEntry>();      
+
+
+            AccountEntry aE = new AccountEntry("Josh", "JoshIsAwesome123", "pandaExpress.com");
+
+            newAccounts.Add(aE);
+            newAccounts.Add(aE);
 
             var users = JsonConvert.SerializeObject(new User {  Username= this.UserName , Password = this.Password,
             Accounts = newAccounts}, Formatting.Indented);
