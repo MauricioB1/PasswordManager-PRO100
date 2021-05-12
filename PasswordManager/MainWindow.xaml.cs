@@ -73,11 +73,7 @@ namespace PasswordManager
             return builder.ToString();
         }
 
-
-        private void Login_Click(object sender, RoutedEventArgs e) { }
-
         private void loginInfoBut_Click(object sender, RoutedEventArgs e)
-
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Text;
@@ -95,6 +91,8 @@ namespace PasswordManager
                 */
                 MessageBox.Show("The user does not exist. Please create user.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+            usernameInput.Clear();
+            passwordInput.Clear();
         }
 
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
@@ -110,7 +108,6 @@ namespace PasswordManager
         //This will change to save it to MongoDB
         private void saveUserInfo()
         {      
-
             User newUser = new User();
 
             Entry newEntry = new Entry("Josh", "JoshIsCool123", "PandaExpress.com");
@@ -131,11 +128,6 @@ namespace PasswordManager
                 JsonSerializer serializer = new JsonSerializer();
                 serializer.Serialize(file, newUser);
             }
-
         }
-
-
     }
-
-    
 }

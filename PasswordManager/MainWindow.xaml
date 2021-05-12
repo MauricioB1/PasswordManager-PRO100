@@ -51,7 +51,7 @@
                 </StackPanel>
             </StackPanel>
 
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
+            <StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top">
                 <Image Source="Images/lock.jpg" Width="85"/>
                 <TextBlock VerticalAlignment="Center" 
                        Text="Password Manager"
