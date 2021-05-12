@@ -50,7 +50,7 @@ namespace PasswordManager
         public MainWindow()
         {
             InitializeComponent();
-            GetUsers();
+            //GetUsers();
         }
 
         private string GeneratePassword()
@@ -106,10 +106,23 @@ namespace PasswordManager
                 */
                 //var result = collectionUser.Find(u => u.UserName == "Josh");
                 //UserName = result.ToString();
-                MessageBox.Show("The user does not exist. Please create user.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
+                string path = "C:/Users/amina/OneDrive - Neumont College of Computer Science/Year 2/Spring 2021/Software Projects/Password Project/PasswordManager/Models/json1.json";
+                string jsonString;
+                using (var reader = new StreamReader(path))
+                {
+                    jsonString = reader.ReadToEnd();
+                }
+
+                if(jsonString.Contains($"\"UserName\": \"{UserName}\"") && jsonString.Contains($"\"Password\": {Password}"))
+                {
+                    PasswordViewer passwordviewer = new PasswordViewer();
+                    passwordviewer.Show();
+                    Close();
+                }else
+                    MessageBox.Show("The user does not exist. Please create user.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            //usernameInput.Clear();
-            //passwordInput.Clear();
+            usernameInput.Clear();
+            passwordInput.Clear();
         }
 
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
@@ -146,23 +159,16 @@ namespace PasswordManager
             }
             catch(Exception)
             {
-                using (File.CreateText(path)) ;
+                using (File.CreateText(path))
                 Console.WriteLine("OOP");
                 rFile = "[";
             }
-
             //You'd have to change the file location for now to a place you can find
             using (StreamWriter file = File.CreateText(path))
             {
                 file.WriteLine(rFile + users + "]");
             }
-
         }
-
-
     }
-
-    
-
-    }
+}
 
