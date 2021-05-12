@@ -1,0 +1,24 @@
+{
+  {
+    "User": [
+      {
+
+        "UserName": "Josh",
+        "Password": 1452345,
+        "Accounts": [
+          {
+            "url": "www.fake.com",
+            "username": "AlsoJosh",
+            "password": "asdfg"
+          },
+          {
+            "url": "www.anotherfake.com",
+            "username": "NotJosh",
+            "password": "NotPassword"
+          }
+        ]
+      }
+    ]
+  }
+
+}
