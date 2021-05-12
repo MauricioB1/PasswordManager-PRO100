@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,6 +16,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Newtonsoft;
 using Newtonsoft.Json;
+using MongoDB.Bson;
+using System.Text.Json;
 
 namespace PasswordManager
 {
@@ -32,10 +35,23 @@ namespace PasswordManager
 
         #endregion Properties
 
+        DataGrid dgUsers = new DataGrid();
+        static MongoClient client = new MongoClient();
+        static IMongoDatabase db = client.GetDatabase("passwordmanager");
+        static IMongoCollection<Users> collectionUser = db.GetCollection<Users>("users");
+        
+
+        public void GetUsers()
+        {
+            Users users = new Users();
+            List<Users> list = collectionUser.AsQueryable().ToList<Users>();
+            dgUsers.ItemsSource = list;
+        }
 
         public MainWindow()
         {
             InitializeComponent();
+            GetUsers();
         }
 
         private string GeneratePassword()
@@ -80,19 +96,21 @@ namespace PasswordManager
 
             if (!(string.IsNullOrEmpty(UserName) && string.IsNullOrWhiteSpace(UserName)) && !(string.IsNullOrEmpty(Password) && string.IsNullOrWhiteSpace(Password)))
             {
-                /*Check database for a matching username
+                /*Check database (json file) for a matching username
                 //PasswordDB.Users.find( { username: usernameInput.Text } );
                     If found, check if the password matches
                         //PasswordDB.Users.find( { username: usernameInput.Text, password: passwordInput.Text } );
                         If it does, successful log in
                         else, incorrect password
-                            MessageBox.Show("Incorrect Password.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
+                            //MessageBox.Show("Incorrect Password.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
                 else username not found; prompt for new user creation
                 */
+                //var result = collectionUser.Find(u => u.UserName == "Josh");
+                //UserName = result.ToString();
                 MessageBox.Show("The user does not exist. Please create user.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            usernameInput.Clear();
-            passwordInput.Clear();
+            //usernameInput.Clear();
+            //passwordInput.Clear();
         }
 
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
@@ -123,10 +141,11 @@ namespace PasswordManager
             newUser.Accounts = newAccounts;
 
             //You'd have to change the file location for now to a place you can find
-            using (StreamWriter file = File.CreateText(@"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\" + UserName + ".json"))
+            using (StreamWriter file = File.CreateText("/Models/json1.json"))
             {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, newUser);
+                ;
+                //JsonSerializer serializer = new JsonSerializer();
+                //serializer.Serialize(file, newUser);
             }
         }
     }
