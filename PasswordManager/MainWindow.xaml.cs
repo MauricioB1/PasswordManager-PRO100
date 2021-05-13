@@ -16,7 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Newtonsoft;
 using Newtonsoft.Json;
-
+using MongoDB.Bson;
 
 namespace PasswordManager
 {
@@ -27,7 +27,7 @@ namespace PasswordManager
     {
 
         #region Properties
-
+        
         private string UserName { get; set; }
 
         private string Password { get; set; }
@@ -37,19 +37,12 @@ namespace PasswordManager
 
         static MongoClient client = new MongoClient();
         static IMongoDatabase db = client.GetDatabase("passwordmanager");
-        static IMongoCollection<Users> collectionUser = db.GetCollection<Users>("users");
-
-        public void GetUsers()
-        {
-            List<Users> list = collectionUser.AsQueryable().ToList<Users>();
-            dgUsers.ItemsSource = list;
-            
-
-        }
+        static IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
+        
         public MainWindow()
         {
             InitializeComponent();
-            GetUsers();
+            
         }
 
         private string GeneratePassword()
@@ -113,11 +106,15 @@ namespace PasswordManager
 
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
-            UserName = usernameInput.Text;
+            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Text);
+            collectionAccount.InsertOne(account);
 
-            Password = passwordInput.Text;
 
-            saveUserInfo();
+            /*UserName = usernameInput.Text;
+
+            Password = passwordInput.Text;*/
+
+            //saveUserInfo();
         }
 
         //This saves the user info using the User class, serializes it to Json and it saves it to a specified file
@@ -154,4 +151,4 @@ namespace PasswordManager
     
 
     }
-}
+
