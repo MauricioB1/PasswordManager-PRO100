@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,22 +10,16 @@ namespace PasswordManager
 {
     public class User
     {
-        
-        public string Username { get; set; }
+        //[BsonId]
+        //public ObjectId Id { get; set; }
+        //[BsonElement("UserId")]
+        //public String userID { get; set; }
 
-        public string Password { get; set; }
+        public string UserName { get; set; }
 
-        public List<Entry> Accounts { get; set; }
+        public int Password { get; set; }
 
-        //public User(string username, string password)
-        //{
-        //    Username = username;
+        public List<AccountEntry> Accounts { get; set; }
 
-        //    Password = password;
-
-        //}
-
-        
-        
     }
 }
