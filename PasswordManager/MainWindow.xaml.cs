@@ -44,6 +44,7 @@ namespace PasswordManager
         {
             InitializeComponent();
 
+
         }
 
         private string GeneratePassword()
@@ -70,7 +71,7 @@ namespace PasswordManager
                         builder.Append(RandNum.ToString());
                         break;
                     case 3:
-                        char[] SymbolArray = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '{', '}','[',']'};
+                        char[] SymbolArray = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '{', '}', '[', ']' };
                         ch = SymbolArray[random.Next(0, 15)];
                         builder.Append(ch);
                         break;
@@ -129,7 +130,8 @@ namespace PasswordManager
                     passwordviewer.Activate();
                     passwordviewer.Show();
                     Close();
-                }else
+                }
+                else
                     MessageBox.Show("The user does not exist. Please create user.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             usernameInput.Clear();
@@ -159,7 +161,7 @@ namespace PasswordManager
             var users = JsonConvert.SerializeObject(new User
             {
                 UserName = this.UserName,
-                Password = int.Parse(Password),
+                Password = Password,
                 Accounts = newAccounts
             }, Formatting.Indented);
 
@@ -191,4 +193,3 @@ namespace PasswordManager
         }
     }
 }
-
