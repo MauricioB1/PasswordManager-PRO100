@@ -40,9 +40,6 @@ namespace PasswordManager
         static IMongoDatabase db = client.GetDatabase("passwordmanager");
         static IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
 
-        static IMongoCollection<User> collectionUser = db.GetCollection<User>("users");
-
-
         public MainWindow()
         {
             InitializeComponent();
