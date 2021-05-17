@@ -39,18 +39,12 @@ namespace PasswordManager
         static MongoClient client = new MongoClient();
         static IMongoDatabase db = client.GetDatabase("passwordmanager");
         static IMongoCollection<User> collectionUser = db.GetCollection<User>("users");
-        DataGrid dgUsers = new DataGrid();
 
-        public void GetUsers()
-        {
-            List<User> list = collectionUser.AsQueryable().ToList<User>();
-            dgUsers.ItemsSource = list;
-        }
 
         public MainWindow()
         {
             InitializeComponent();
-            //GetUsers();
+
         }
 
         private string GeneratePassword()
@@ -113,7 +107,7 @@ namespace PasswordManager
                     jsonString = reader.ReadToEnd();
                 }
 
-                if(jsonString.Contains($"\"UserName\": \"{UserName}\"") && jsonString.Contains($"\"Password\": {Password}"))
+                if(jsonString.Contains($"\"UserName\": \"{UserName}\"") && jsonString.Contains($"\"Password\": \"{Password}\""))
                 {
                     PasswordViewer passwordviewer = new PasswordViewer();
                     var entryJson = JsonConvert.DeserializeObject<List<User>>(jsonString);
@@ -159,7 +153,7 @@ namespace PasswordManager
 
             List<AccountEntry> newAccounts = new List<AccountEntry>();      
 
-            var users = JsonConvert.SerializeObject(new User {  UserName= this.UserName , Password = int.Parse(Password),
+            var users = JsonConvert.SerializeObject(new User {  UserName= this.UserName , Password = Password,
             Accounts = newAccounts}, Formatting.Indented);
 
             //You'd have to change the file location for now to a place you can find

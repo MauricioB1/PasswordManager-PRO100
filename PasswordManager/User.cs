@@ -17,7 +17,7 @@ namespace PasswordManager
 
         public string UserName { get; set; }
 
-        public int Password { get; set; }
+        public string Password { get; set; }
 
         public List<AccountEntry> Accounts { get; set; }
 
