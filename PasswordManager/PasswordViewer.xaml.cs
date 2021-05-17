@@ -65,6 +65,10 @@ namespace PasswordManager
                 }
             }
 
+            usernameInput.Clear();
+            passwordInput.Clear();
+            urlInput.Clear();
+
         }
 
         public void AddEntry(AccountEntry entry)

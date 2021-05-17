@@ -106,7 +106,9 @@ namespace PasswordManager
                 */
                 //var result = collectionUser.Find(u => u.UserName == "Josh");
                 //UserName = result.ToString();
-                string path = @"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\ProjectThingy\PRO100\PasswordManager\Models\json1.json";
+
+                //Change Path Here!
+                string path = @"C:\Users\amina\OneDrive - Neumont College of Computer Science\Year 2\Spring 2021\Software Projects\Password Project\PasswordManager\Models\json1.json";
                 string jsonString;
                 using (var reader = new StreamReader(path))
                 {
@@ -163,7 +165,7 @@ namespace PasswordManager
             Accounts = newAccounts}, Formatting.Indented);
 
             //You'd have to change the file location for now to a place you can find
-            string path = @"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\ProjectThingy\PRO100\PasswordManager\Models\json1.json";
+            string path = @"C:\Users\amina\OneDrive - Neumont College of Computer Science\Year 2\Spring 2021\Software Projects\Password Project\PasswordManager\Models\json1.json";
 
             string rFile;
 
