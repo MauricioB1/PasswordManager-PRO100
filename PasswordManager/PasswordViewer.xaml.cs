@@ -32,6 +32,12 @@ namespace PasswordManager
 
         public string Path { get; set; }
 
+        private string UserName { get; set; }
+
+        private string Password { get; set; }
+
+        private string Url { get; set; }
+
         #endregion Properties
 
         public PasswordViewer()
@@ -44,11 +50,16 @@ namespace PasswordManager
 
         private void addEntryBut_Click(object sender, RoutedEventArgs e)
         {
-            entries.Add(new AccountEntry(usernameInput.Text, passwordInput.Text, urlInput.Text));
 
-            LstEntries.Items.Add(new AccountEntry(usernameInput.Text, passwordInput.Text, urlInput.Text));
+            UserName = usernameInput.Text;
+            Password = passwordInput.Text;
+            Url = urlInput.Text;
 
-            CurrUser.Accounts.Add(new AccountEntry(usernameInput.Text, passwordInput.Text, urlInput.Text));
+            entries.Add(new AccountEntry(UserName, Password, Url));
+
+            LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
+
+            CurrUser.Accounts.Add(new AccountEntry(UserName, Password, Url));
 
             foreach (var c1 in UsersList)
             {
@@ -74,6 +85,48 @@ namespace PasswordManager
 
         }
 
+
+        private string GeneratePassword()
+        {
+            Random random = new Random();
+            StringBuilder builder = new StringBuilder();
+            char ch;
+            for (int i = 0; i < 16; i++)
+            {
+                int randomNum = random.Next(1, 4);
+                switch (randomNum)
+                {
+                    case 1:
+                        ch = (char)random.Next('A', 'Z');
+                        if (i % 2 == 1)
+                        {
+                            builder.Append(char.ToLower(ch));
+                        }
+                        else
+                            builder.Append(ch);
+                        break;
+                    case 2:
+                        int RandNum = random.Next(0, 9);
+                        builder.Append(RandNum.ToString());
+                        break;
+                    case 3:
+                        char[] SymbolArray = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '{', '}', '[', ']' };
+                        ch = SymbolArray[random.Next(0, 15)];
+                        builder.Append(ch);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return builder.ToString();
+        }
+
+        private void generatePassBut_Click(object sender, RoutedEventArgs e)
+        {
+            Password = GeneratePassword();
+
+            passwordInput.Text = Password;
+        }
     }
 
     
