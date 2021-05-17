@@ -28,7 +28,7 @@ namespace PasswordManager
     {
 
         #region Properties
-
+        
         private string UserName { get; set; }
 
         private string Password { get; set; }
@@ -38,12 +38,15 @@ namespace PasswordManager
 
         static MongoClient client = new MongoClient();
         static IMongoDatabase db = client.GetDatabase("passwordmanager");
+        static IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
+        
         static IMongoCollection<User> collectionUser = db.GetCollection<User>("users");
 
 
         public MainWindow()
         {
             InitializeComponent();
+            
 
         }
 
@@ -139,11 +142,15 @@ namespace PasswordManager
 
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
-            UserName = usernameInput.Text;
+            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Text);
+            collectionAccount.InsertOne(account);
 
-            Password = passwordInput.Text;
 
-            SaveUserInfo();
+            /*UserName = usernameInput.Text;
+
+            Password = passwordInput.Text;*/
+
+            //saveUserInfo();
         }
 
         //This saves the user info using the User class, serializes it to Json and it saves it to a specified file
@@ -183,5 +190,4 @@ namespace PasswordManager
             }
         }
     }
-}
 
