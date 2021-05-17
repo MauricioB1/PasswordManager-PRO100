@@ -28,7 +28,7 @@ namespace PasswordManager
     {
 
         #region Properties
-        
+
         private string UserName { get; set; }
 
         private string Password { get; set; }
@@ -39,11 +39,11 @@ namespace PasswordManager
         static MongoClient client = new MongoClient();
         static IMongoDatabase db = client.GetDatabase("passwordmanager");
         static IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
-        
+
         public MainWindow()
         {
             InitializeComponent();
-            
+
         }
 
         private string GeneratePassword()
@@ -76,7 +76,7 @@ namespace PasswordManager
                         break;
                     default:
                         break;
-                } 
+                }
             }
             return builder.ToString();
         }
@@ -99,21 +99,21 @@ namespace PasswordManager
                 */
                 //var result = collectionUser.Find(u => u.UserName == "Josh");
                 //UserName = result.ToString();
-                string path = @"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\ProjectThingy\PRO100\PasswordManager\Models\json1.json";
+                string path = @"C:\Users\Aliyah Jones\Documents\Software Projects\PasswordManager-PRO100\PasswordManager\json1.json";
                 string jsonString;
                 using (var reader = new StreamReader(path))
                 {
                     jsonString = reader.ReadToEnd();
                 }
 
-                if(jsonString.Contains($"\"UserName\": \"{UserName}\"") && jsonString.Contains($"\"Password\": {Password}"))
+                if (jsonString.Contains($"\"UserName\": \"{UserName}\"") && jsonString.Contains($"\"Password\": \"{Password}\""))
                 {
                     PasswordViewer passwordviewer = new PasswordViewer();
                     var entryJson = JsonConvert.DeserializeObject<List<User>>(jsonString);
                     User currUser = null;
                     foreach (var c1 in entryJson)
                     {
-                        if (c1.UserName.Equals(UserName)) 
+                        if (c1.UserName.Equals(UserName))
                         {
                             currUser = c1;
                             foreach (var c2 in c1.Accounts)
@@ -152,12 +152,16 @@ namespace PasswordManager
         //This saves the user info using the User class, serializes it to Json and it saves it to a specified file
         //This will change to save it to MongoDB
         private void SaveUserInfo()
-        {        
+        {
 
-            List<AccountEntry> newAccounts = new List<AccountEntry>();      
+            List<AccountEntry> newAccounts = new List<AccountEntry>();
 
-            var users = JsonConvert.SerializeObject(new User {  UserName= this.UserName , Password = int.Parse(Password),
-            Accounts = newAccounts}, Formatting.Indented);
+            var users = JsonConvert.SerializeObject(new User
+            {
+                UserName = this.UserName,
+                Password = int.Parse(Password),
+                Accounts = newAccounts
+            }, Formatting.Indented);
 
             //You'd have to change the file location for now to a place you can find
             string path = @"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\ProjectThingy\PRO100\PasswordManager\Models\json1.json";
@@ -173,17 +177,18 @@ namespace PasswordManager
                 rFile += ",";
 
             }
-            catch(Exception)
+            catch (Exception)
             {
                 using (File.CreateText(path))
-                Console.WriteLine("OOP");
+                    Console.WriteLine("OOP");
                 rFile = "[";
             }
-            
+
             using (StreamWriter file = File.CreateText(path))
             {
                 file.WriteLine(rFile + users + "]");
             }
         }
     }
+}
 
