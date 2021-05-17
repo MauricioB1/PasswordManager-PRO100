@@ -1,7 +1,7 @@
 [
   {
     "UserName": "Josh",
-    "Password": 1452345,
+    "Password": "1452345",
     "Accounts": [
       {
         "AccountUserName": "AlsoJosh",
@@ -14,6 +14,7 @@
         "AccountUrl": "www.anotherfake.com"
       }
     ]
+<<<<<<< HEAD
   },
   {
     "UserName": "Rob",
@@ -52,5 +53,7 @@
         "AccountUrl": "walter.com"
       }
     ]
+=======
+>>>>>>> c6dc19baf26d2a3e198280be1e2b8b5ad3039798
   }
 ]

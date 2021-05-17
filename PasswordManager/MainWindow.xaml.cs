@@ -38,19 +38,16 @@ namespace PasswordManager
 
         static MongoClient client = new MongoClient();
         static IMongoDatabase db = client.GetDatabase("passwordmanager");
-        static IMongoCollection<User> collectionUser = db.GetCollection<User>("users");
-        DataGrid dgUsers = new DataGrid();
+        static IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
 
-        public void GetUsers()
-        {
-            List<User> list = collectionUser.AsQueryable().ToList<User>();
-            dgUsers.ItemsSource = list;
-        }
+        static IMongoCollection<User> collectionUser = db.GetCollection<User>("users");
+
 
         public MainWindow()
         {
             InitializeComponent();
-            //GetUsers();
+
+
         }
 
         private string GeneratePassword()
@@ -77,13 +74,13 @@ namespace PasswordManager
                         builder.Append(RandNum.ToString());
                         break;
                     case 3:
-                        char[] SymbolArray = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '{', '}','[',']'};
+                        char[] SymbolArray = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '{', '}', '[', ']' };
                         ch = SymbolArray[random.Next(0, 15)];
                         builder.Append(ch);
                         break;
                     default:
                         break;
-                } 
+                }
             }
             return builder.ToString();
         }
@@ -115,14 +112,14 @@ namespace PasswordManager
                     jsonString = reader.ReadToEnd();
                 }
 
-                if(jsonString.Contains($"\"UserName\": \"{UserName}\"") && jsonString.Contains($"\"Password\": {Password}"))
+                if (jsonString.Contains($"\"UserName\": \"{UserName}\"") && jsonString.Contains($"\"Password\": \"{Password}\""))
                 {
                     PasswordViewer passwordviewer = new PasswordViewer();
                     var entryJson = JsonConvert.DeserializeObject<List<User>>(jsonString);
                     User currUser = null;
                     foreach (var c1 in entryJson)
                     {
-                        if (c1.UserName.Equals(UserName)) 
+                        if (c1.UserName.Equals(UserName))
                         {
                             currUser = c1;
                             foreach (var c2 in c1.Accounts)
@@ -138,7 +135,8 @@ namespace PasswordManager
                     passwordviewer.Activate();
                     passwordviewer.Show();
                     Close();
-                }else
+                }
+                else
                     MessageBox.Show("The user does not exist. Please create user.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             usernameInput.Clear();
@@ -147,22 +145,30 @@ namespace PasswordManager
 
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
-            UserName = usernameInput.Text;
+            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Text);
+            collectionAccount.InsertOne(account);
 
-            Password = passwordInput.Text;
 
-            SaveUserInfo();
+            /*UserName = usernameInput.Text;
+
+            Password = passwordInput.Text;*/
+
+            //saveUserInfo();
         }
 
         //This saves the user info using the User class, serializes it to Json and it saves it to a specified file
         //This will change to save it to MongoDB
         private void SaveUserInfo()
-        {        
+        {
 
-            List<AccountEntry> newAccounts = new List<AccountEntry>();      
+            List<AccountEntry> newAccounts = new List<AccountEntry>();
 
-            var users = JsonConvert.SerializeObject(new User {  UserName= this.UserName , Password = int.Parse(Password),
-            Accounts = newAccounts}, Formatting.Indented);
+            var users = JsonConvert.SerializeObject(new User
+            {
+                UserName = this.UserName,
+                Password = Password,
+                Accounts = newAccounts
+            }, Formatting.Indented);
 
             //You'd have to change the file location for now to a place you can find
             string path = @"C:\Users\amina\OneDrive - Neumont College of Computer Science\Year 2\Spring 2021\Software Projects\Password Project\PasswordManager\Models\json1.json";
@@ -178,13 +184,13 @@ namespace PasswordManager
                 rFile += ",";
 
             }
-            catch(Exception)
+            catch (Exception)
             {
                 using (File.CreateText(path))
-                Console.WriteLine("OOP");
+                    Console.WriteLine("OOP");
                 rFile = "[";
             }
-            
+
             using (StreamWriter file = File.CreateText(path))
             {
                 file.WriteLine(rFile + users + "]");
@@ -192,4 +198,3 @@ namespace PasswordManager
         }
     }
 }
-
