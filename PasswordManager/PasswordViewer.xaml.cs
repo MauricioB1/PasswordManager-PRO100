@@ -69,6 +69,15 @@ namespace PasswordManager
                 }
             }
 
+            UserName = null;
+            Password = null;
+            Url = null;
+
+            usernameInput.Text = "";
+            passwordInput.Text = "";
+            urlInput.Text = "";
+
+
         }
 
         public void AddEntry(AccountEntry entry)
@@ -123,14 +132,22 @@ namespace PasswordManager
         private void deleteEntryBut_Click(object sender, RoutedEventArgs e)
         {
             AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
+            
+            foreach (var c1 in CurrUser.Accounts)
+            {
+                if (c1.AccountUserName.Equals(entry.AccountUserName))
+                {
+                    CurrUser.Accounts.Remove(c1);
+                    break;
+                }
+            }
+
             LstEntries.Items.Remove(entry);
-            CurrUser.Accounts.Remove(entry);
 
             foreach (var c1 in UsersList)
             {
                 if (c1.UserName.Equals(CurrUser.UserName))
                 {
-
 
                     using (StreamWriter file = File.CreateText(Path))
                     {

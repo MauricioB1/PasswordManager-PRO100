@@ -58,7 +58,7 @@ namespace PasswordManager
         private void loginInfoBut_Click(object sender, RoutedEventArgs e)
         {
             UserName = usernameInput.Text;
-            Password = passwordInput.Text;
+            Password = passwordInput.Password;
 
             if (!(string.IsNullOrEmpty(UserName) && string.IsNullOrWhiteSpace(UserName)) && !(string.IsNullOrEmpty(Password) && string.IsNullOrWhiteSpace(Password)))
             {
@@ -113,7 +113,7 @@ namespace PasswordManager
 
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
-            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Text);
+            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Password);
             collectionAccount.InsertOne(account);
 
 
