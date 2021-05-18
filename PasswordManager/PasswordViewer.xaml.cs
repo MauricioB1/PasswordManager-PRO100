@@ -24,8 +24,6 @@ namespace PasswordManager
 
         #region Properties
 
-        public List<AccountEntry> entries = new List<AccountEntry>();
-
         public User CurrUser { get; set; }
 
         public List<User> UsersList = new List<User>();
@@ -43,9 +41,6 @@ namespace PasswordManager
         public PasswordViewer()
         {
             InitializeComponent();
-
-            
-
         }
 
         private void addEntryBut_Click(object sender, RoutedEventArgs e)
@@ -55,8 +50,6 @@ namespace PasswordManager
             Password = passwordInput.Text;
             Url = urlInput.Text;
 
-            entries.Add(new AccountEntry(UserName, Password, Url));
-
             LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
 
             CurrUser.Accounts.Add(new AccountEntry(UserName, Password, Url));
@@ -65,13 +58,13 @@ namespace PasswordManager
             {
                 if (c1.UserName.Equals(CurrUser.UserName))
                 {
-                    
+
 
                     using (StreamWriter file = File.CreateText(Path))
                     {
                         JsonSerializer serializer = new JsonSerializer();
                         serializer.Formatting = Formatting.Indented;
-                        serializer.Serialize(file, UsersList );
+                        serializer.Serialize(file, UsersList);
                     }
                 }
             }
@@ -80,7 +73,6 @@ namespace PasswordManager
 
         public void AddEntry(AccountEntry entry)
         {
-            entries.Add(entry);
             LstEntries.Items.Add(entry);
 
         }
@@ -127,7 +119,30 @@ namespace PasswordManager
 
             passwordInput.Text = Password;
         }
+
+        private void deleteEntryBut_Click(object sender, RoutedEventArgs e)
+        {
+            AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
+            LstEntries.Items.Remove(entry);
+            CurrUser.Accounts.Remove(entry);
+
+            foreach (var c1 in UsersList)
+            {
+                if (c1.UserName.Equals(CurrUser.UserName))
+                {
+
+
+                    using (StreamWriter file = File.CreateText(Path))
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        serializer.Formatting = Formatting.Indented;
+                        serializer.Serialize(file, UsersList);
+                    }
+                }
+            }
+
+        }
     }
 
-    
+
 }
