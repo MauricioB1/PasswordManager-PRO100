@@ -10,6 +10,8 @@ namespace PasswordManager
 {
     class UserandPassword
     {
+        [BsonId]
+        public ObjectId Id { get; set; }
         [BsonElement("User")]
         public string User { get; set; }
         [BsonElement("Password")]

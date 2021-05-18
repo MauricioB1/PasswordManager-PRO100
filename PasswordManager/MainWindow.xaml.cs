@@ -50,60 +50,32 @@ namespace PasswordManager
 
         }
 
-        
 
-        private void loginInfoBut_Click(object sender, RoutedEventArgs e)
+
+        private async void loginInfoBut_Click(object sender, RoutedEventArgs e)
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Text;
 
-            if (!(string.IsNullOrEmpty(UserName) && string.IsNullOrWhiteSpace(UserName)) && !(string.IsNullOrEmpty(Password) && string.IsNullOrWhiteSpace(Password)))
+            var accounts = await collectionAccount.Find(_ => true).ToListAsync();
+            foreach (var a in accounts)
             {
-                /*Check database (json file) for a matching username
-                //PasswordDB.Users.find( { username: usernameInput.Text } );
-                    If found, check if the password matches
-                        //PasswordDB.Users.find( { username: usernameInput.Text, password: passwordInput.Text } );
-                        If it does, successful log in
-                        else, incorrect password
-                            //MessageBox.Show("Incorrect Password.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
-                else username not found; prompt for new user creation
-                */
-                //var result = collectionUser.Find(u => u.UserName == "Josh");
-                //UserName = result.ToString();
-                string path = @"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\ProjectThingy\PRO100\PasswordManager\Models\json1.json";
-                string jsonString;
-                using (var reader = new StreamReader(path))
-                {
-                    jsonString = reader.ReadToEnd();
-                }
-
-                if (jsonString.Contains($"\"UserName\": \"{UserName}\"") && jsonString.Contains($"\"Password\": \"{Password}\""))
+                if (UserName.Equals(a.User) && Password.Equals(a.Password))
                 {
                     PasswordViewer passwordviewer = new PasswordViewer();
-                    var entryJson = JsonConvert.DeserializeObject<List<User>>(jsonString);
-                    User currUser = null;
-                    foreach (var c1 in entryJson)
-                    {
-                        if (c1.UserName.Equals(UserName))
-                        {
-                            currUser = c1;
-                            foreach (var c2 in c1.Accounts)
-                            {
-                                passwordviewer.AddEntry(c2);
-                            }
-
-                        }
-                    }
-                    passwordviewer.UsersList = entryJson;
-                    passwordviewer.CurrUser = currUser;
-                    passwordviewer.Path = path;
                     passwordviewer.Activate();
                     passwordviewer.Show();
                     Close();
+                    break;
                 }
                 else
+                {
                     MessageBox.Show("The user does not exist. Please create user.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
+                    break;
+
+                }
             }
+
             usernameInput.Clear();
             passwordInput.Clear();
         }
@@ -114,11 +86,6 @@ namespace PasswordManager
             collectionAccount.InsertOne(account);
 
 
-            /*UserName = usernameInput.Text;
-
-            Password = passwordInput.Text;*/
-
-            //saveUserInfo();
         }
 
         //This saves the user info using the User class, serializes it to Json and it saves it to a specified file
