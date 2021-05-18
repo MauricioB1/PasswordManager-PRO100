@@ -71,7 +71,7 @@ namespace PasswordManager
                 else
                 {
                     MessageBox.Show("The user does not exist. Please create user.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
-                    break;
+                    
 
                 }
             }
@@ -85,7 +85,8 @@ namespace PasswordManager
             UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Text);
             collectionAccount.InsertOne(account);
 
-
+            usernameInput.Clear();
+            passwordInput.Clear();
         }
 
         //This saves the user info using the User class, serializes it to Json and it saves it to a specified file

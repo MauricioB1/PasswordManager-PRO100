@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MongoDB.Driver;
 using Newtonsoft.Json;
 
 namespace PasswordManager
@@ -40,6 +41,9 @@ namespace PasswordManager
 
         #endregion Properties
 
+        static MongoClient client = new MongoClient();
+        static IMongoDatabase db = client.GetDatabase("passwordmanager");
+        static IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
         public PasswordViewer()
         {
             InitializeComponent();
@@ -50,31 +54,33 @@ namespace PasswordManager
 
         private void addEntryBut_Click(object sender, RoutedEventArgs e)
         {
+            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Text);
+            collectionAccount.InsertOne(account);
 
-            UserName = usernameInput.Text;
-            Password = passwordInput.Text;
-            Url = urlInput.Text;
+            /* UserName = usernameInput.Text;
+             Password = passwordInput.Text;
+             Url = urlInput.Text;
 
-            entries.Add(new AccountEntry(UserName, Password, Url));
+             entries.Add(new AccountEntry(UserName, Password, Url));
 
-            LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
+             LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
 
-            CurrUser.Accounts.Add(new AccountEntry(UserName, Password, Url));
+             CurrUser.Accounts.Add(new AccountEntry(UserName, Password, Url));
 
-            foreach (var c1 in UsersList)
-            {
-                if (c1.UserName.Equals(CurrUser.UserName))
-                {
-                    
+             foreach (var c1 in UsersList)
+             {
+                 if (c1.UserName.Equals(CurrUser.UserName))
+                 {
 
-                    using (StreamWriter file = File.CreateText(Path))
-                    {
-                        JsonSerializer serializer = new JsonSerializer();
-                        serializer.Formatting = Formatting.Indented;
-                        serializer.Serialize(file, UsersList );
-                    }
-                }
-            }
+
+                     using (StreamWriter file = File.CreateText(Path))
+                     {
+                         JsonSerializer serializer = new JsonSerializer();
+                         serializer.Formatting = Formatting.Indented;
+                         serializer.Serialize(file, UsersList );
+                     }
+                 }
+             }*/
 
         }
 
