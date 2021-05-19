@@ -34,6 +34,8 @@ namespace PasswordManager
 
         private string Password { get; set; }
 
+        private string[] SaltHash { get; set; }
+
         #endregion Properties
 
 
@@ -46,14 +48,13 @@ namespace PasswordManager
         private const int SaltByteSize = 24;
         private const int HashByteSize = 24;
         private const int HashingIteration = 10000;
+        private byte[] Salt = new byte[SaltByteSize];
 
 
         public MainWindow()
         {
             InitializeComponent();
         }
-
-
 
         private async void loginInfoBut_Click(object sender, RoutedEventArgs e)
         {
@@ -74,7 +75,7 @@ namespace PasswordManager
                     Close();
                     break;
                 }
-                else if (userInt < accounts.Count-1)
+                else if (userInt < accounts.Count - 1)
                 {
                     userInt++;
 
@@ -94,7 +95,8 @@ namespace PasswordManager
 
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
-            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Password);
+            SaltHash = new string[] { GenerateSalt(), HashPassword() };
+            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Password, SaltHash);
             collectionAccount.InsertOne(account);
 
             usernameInput.Clear();
@@ -142,13 +144,30 @@ namespace PasswordManager
             }
         }
 
+
+        //Generates 24 bit random characters to append to the password before hashing
         private string GenerateSalt()
         {
             RNGCryptoServiceProvider saltGenerator = new RNGCryptoServiceProvider();
-            byte[] salt = new byte[SaltByteSize];
-            saltGenerator.GetBytes(salt);
-            usernameInput.Text = Convert.ToBase64String(salt);
-            return Convert.ToBase64String(salt);
+            saltGenerator.GetBytes(Salt);
+            return Convert.ToBase64String(Salt);
+        }
+
+        //Takes the generated salt and password and makes a 24 bit hash
+        private string HashPassword()
+        {
+            Salt = Convert.FromBase64String(GenerateSalt());
+            string password = passwordInput.Password;
+            Rfc2898DeriveBytes hashGenerator = new Rfc2898DeriveBytes(password, Salt);
+            hashGenerator.IterationCount = HashingIteration;
+            return Convert.ToBase64String(hashGenerator.GetBytes(HashByteSize));
+        }
+
+        private void ValidatePassword()
+        {
+            //retrieve user's salt and hash from database
+            //add salt to current password input and hash using same hash
+            //compare the new hash with the one in the database
         }
     }
 }

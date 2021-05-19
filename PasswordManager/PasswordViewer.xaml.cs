@@ -79,8 +79,6 @@ namespace PasswordManager
             usernameInput.Text = "";
             passwordInput.Text = "";
             urlInput.Text = "";
-
-
         }
 
         public void AddEntry(AccountEntry entry)
@@ -88,7 +86,6 @@ namespace PasswordManager
             LstEntries.Items.Add(entry);
 
         }
-
 
         private string GeneratePassword()
         {
@@ -127,9 +124,7 @@ namespace PasswordManager
 
         private void generatePassBut_Click(object sender, RoutedEventArgs e)
         {
-            Password = GeneratePassword();
-
-            passwordInput.Text = Password;
+            passwordInput.Text = GeneratePassword();
         }
 
         private void deleteEntryBut_Click(object sender, RoutedEventArgs e)
