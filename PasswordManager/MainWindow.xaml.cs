@@ -60,16 +60,19 @@ namespace PasswordManager
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Password;
+            bool userBreak = true;
             ValidatePassword();
             /*int userInt = 0;
             bool userBreak = true;
 
             var accounts = await collectionAccount.Find(_ => true).ToListAsync();
+            int userInt = 0;
             while (userBreak)
             {
                 if (UserName.Equals(accounts[userInt].User) && Password.Equals(accounts[userInt].Password))
                 {
                     PasswordViewer passwordviewer = new PasswordViewer();
+                    passwordviewer.loggedInUser = accounts[userInt];
                     passwordviewer.Activate();
                     passwordviewer.Show();
                     Close();

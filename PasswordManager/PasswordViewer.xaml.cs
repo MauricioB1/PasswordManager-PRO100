@@ -42,6 +42,7 @@ namespace PasswordManager
         static MongoClient client = new MongoClient();
         static IMongoDatabase db = client.GetDatabase("passwordmanager");
         static IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
+        public UserandPassword loggedInUser { get; set; }
         public PasswordViewer()
         {
             InitializeComponent();
@@ -49,45 +50,23 @@ namespace PasswordManager
 
         private void addEntryBut_Click(object sender, RoutedEventArgs e)
         {
-            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Text);
-            collectionAccount.InsertOne(account);
 
-            /* UserName = usernameInput.Text;
-             Password = passwordInput.Text;
-             Url = urlInput.Text;
-
-             entries.Add(new AccountEntry(UserName, Password, Url));
-
-             LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
-            LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
-
-             CurrUser.Accounts.Add(new AccountEntry(UserName, Password, Url));
-
-             foreach (var c1 in UsersList)
-             {
-                 if (c1.UserName.Equals(CurrUser.UserName))
-                 {
-
-            foreach (var c1 in UsersList)
+            UserName = usernameInput.Text;
+            Password = passwordInput.Text;
+            Url = urlInput.Text;
+           
+            if (UserName.Trim() != "" && Password.Trim() != "")
             {
-                if (c1.UserName.Equals(CurrUser.UserName))
-                {
+                loggedInUser.Accounts.Add(new AccountEntry(UserName, Password, Url));
+                var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
+                collectionAccount.FindOneAndUpdate(
+                    item => item.Id == loggedInUser.Id,
+                    update);
 
-
-                     using (StreamWriter file = File.CreateText(Path))
-                     {
-                         JsonSerializer serializer = new JsonSerializer();
-                         serializer.Formatting = Formatting.Indented;
-                         serializer.Serialize(file, UsersList );
-                     }
-                 }
-             }*/
-                    //using (StreamWriter file = File.CreateText(Path))
-                    //{
-                    //    JsonSerializer serializer = new JsonSerializer();
-                    //    serializer.Formatting = Formatting.Indented;
-                    //    serializer.Serialize(file, UsersList);
-                    //}
+                //To delete,
+                //loggedInUser.Accounts.Remove(new AccountEntry(UserName, Password, Url));
+                //var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
+            
                 
 
             UserName = null;
@@ -148,7 +127,7 @@ namespace PasswordManager
         private void deleteEntryBut_Click(object sender, RoutedEventArgs e)
         {
             AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
-            
+
             foreach (var c1 in CurrUser.Accounts)
             {
                 if (c1.AccountUserName.Equals(entry.AccountUserName))
@@ -174,6 +153,14 @@ namespace PasswordManager
                 }
             }
 
+        }
+
+        private void backbut_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Activate();
+            mainWindow.Show();
+            Close();
         }
     }
 
