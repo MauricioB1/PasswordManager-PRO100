@@ -46,6 +46,7 @@ namespace PasswordManager
         private const int SaltByteSize = 24;
         private const int HashByteSize = 24;
         private const int HashingIteration = 10000;
+        private byte[] Salt = new byte[SaltByteSize];
 
 
         public MainWindow()
@@ -62,17 +63,6 @@ namespace PasswordManager
 
             if (!(string.IsNullOrEmpty(UserName) && string.IsNullOrWhiteSpace(UserName)) && !(string.IsNullOrEmpty(Password) && string.IsNullOrWhiteSpace(Password)))
             {
-                /*Check database (json file) for a matching username
-                //PasswordDB.Users.find( { username: usernameInput.Text } );
-                    If found, check if the password matches
-                        //PasswordDB.Users.find( { username: usernameInput.Text, password: passwordInput.Text } );
-                        If it does, successful log in
-                        else, incorrect password
-                            //MessageBox.Show("Incorrect Password.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
-                else username not found; prompt for new user creation
-                */
-                //var result = collectionUser.Find(u => u.UserName == "Josh");
-                //UserName = result.ToString();
                 string path = @"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\ProjectThingy\PRO100\PasswordManager\Models\json1.json";
                 string jsonString;
                 using (var reader = new StreamReader(path))
@@ -113,6 +103,7 @@ namespace PasswordManager
 
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
+
             UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Text);
             collectionAccount.InsertOne(account);
 
@@ -165,13 +156,30 @@ namespace PasswordManager
             }
         }
 
+
+        //Generates 24 bit random characters to append to the password before hashing
         private string GenerateSalt()
         {
             RNGCryptoServiceProvider saltGenerator = new RNGCryptoServiceProvider();
-            byte[] salt = new byte[SaltByteSize];
-            saltGenerator.GetBytes(salt);
-            usernameInput.Text = Convert.ToBase64String(salt);
-            return Convert.ToBase64String(salt);
+            saltGenerator.GetBytes(Salt);
+            return Convert.ToBase64String(Salt);
+        }
+
+        //Takes the generated salt and password and makes a 24 bit hash
+        private string HashPassword()
+        {
+            Salt = Convert.FromBase64String(GenerateSalt());
+            string password = passwordInput.Text;
+            Rfc2898DeriveBytes hashGenerator = new Rfc2898DeriveBytes(password, Salt);
+            hashGenerator.IterationCount = HashingIteration;
+            return Convert.ToBase64String(hashGenerator.GetBytes(HashByteSize));
+        }
+
+        private void ValidatePassword()
+        {
+            //retrieve user's salt and hash from database
+            //add salt to current password input and hash using same hash
+            //compare the new hash with the one in the database
         }
     }
 }
