@@ -25,8 +25,6 @@ namespace PasswordManager
 
         #region Properties
 
-        public List<AccountEntry> entries = new List<AccountEntry>();
-
         public User CurrUser { get; set; }
 
         public List<User> UsersList = new List<User>();
@@ -47,9 +45,6 @@ namespace PasswordManager
         public PasswordViewer()
         {
             InitializeComponent();
-
-            
-
         }
 
         private void addEntryBut_Click(object sender, RoutedEventArgs e)
@@ -64,6 +59,7 @@ namespace PasswordManager
              entries.Add(new AccountEntry(UserName, Password, Url));
 
              LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
+            LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
 
              CurrUser.Accounts.Add(new AccountEntry(UserName, Password, Url));
 
@@ -71,6 +67,11 @@ namespace PasswordManager
              {
                  if (c1.UserName.Equals(CurrUser.UserName))
                  {
+
+            foreach (var c1 in UsersList)
+            {
+                if (c1.UserName.Equals(CurrUser.UserName))
+                {
 
 
                      using (StreamWriter file = File.CreateText(Path))
@@ -81,12 +82,28 @@ namespace PasswordManager
                      }
                  }
              }*/
+                    using (StreamWriter file = File.CreateText(Path))
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        serializer.Formatting = Formatting.Indented;
+                        serializer.Serialize(file, UsersList);
+                    }
+                }
+            }
+
+            UserName = null;
+            Password = null;
+            Url = null;
+
+            usernameInput.Text = "";
+            passwordInput.Text = "";
+            urlInput.Text = "";
+
 
         }
 
         public void AddEntry(AccountEntry entry)
         {
-            entries.Add(entry);
             LstEntries.Items.Add(entry);
 
         }
@@ -133,7 +150,38 @@ namespace PasswordManager
 
             passwordInput.Text = Password;
         }
+
+        private void deleteEntryBut_Click(object sender, RoutedEventArgs e)
+        {
+            AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
+            
+            foreach (var c1 in CurrUser.Accounts)
+            {
+                if (c1.AccountUserName.Equals(entry.AccountUserName))
+                {
+                    CurrUser.Accounts.Remove(c1);
+                    break;
+                }
+            }
+
+            LstEntries.Items.Remove(entry);
+
+            foreach (var c1 in UsersList)
+            {
+                if (c1.UserName.Equals(CurrUser.UserName))
+                {
+
+                    using (StreamWriter file = File.CreateText(Path))
+                    {
+                        JsonSerializer serializer = new JsonSerializer();
+                        serializer.Formatting = Formatting.Indented;
+                        serializer.Serialize(file, UsersList);
+                    }
+                }
+            }
+
+        }
     }
 
-    
+
 }

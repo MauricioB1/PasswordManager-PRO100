@@ -12,11 +12,6 @@
         "AccountUserName": "NotJosh",
         "AccountPassword": "NotPassword",
         "AccountUrl": "www.anotherfake.com"
-      },
-      {
-        "AccountUserName": "Josh is Cool",
-        "AccountPassword": "K@6*(&W-3i8!0$#w",
-        "AccountUrl": "www.evenmorefake.com"
       }
     ]
   }

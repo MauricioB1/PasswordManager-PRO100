@@ -18,6 +18,7 @@ using Newtonsoft;
 using Newtonsoft.Json;
 using MongoDB.Bson;
 using System.Text.Json;
+using System.Security.Cryptography;
 
 namespace PasswordManager
 {
@@ -42,12 +43,14 @@ namespace PasswordManager
 
         static IMongoCollection<User> collectionUser = db.GetCollection<User>("users");
 
+        private const int SaltByteSize = 24;
+        private const int HashByteSize = 24;
+        private const int HashingIteration = 10000;
+
 
         public MainWindow()
         {
             InitializeComponent();
-
-
         }
 
 
@@ -55,7 +58,7 @@ namespace PasswordManager
         private async void loginInfoBut_Click(object sender, RoutedEventArgs e)
         {
             UserName = usernameInput.Text;
-            Password = passwordInput.Text;
+            Password = passwordInput.Password;
 
             var accounts = await collectionAccount.Find(_ => true).ToListAsync();
             foreach (var a in accounts)
@@ -82,7 +85,7 @@ namespace PasswordManager
 
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
-            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Text);
+            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Password);
             collectionAccount.InsertOne(account);
 
             usernameInput.Clear();
@@ -128,6 +131,15 @@ namespace PasswordManager
             {
                 file.WriteLine(rFile + users + "]");
             }
+        }
+
+        private string GenerateSalt()
+        {
+            RNGCryptoServiceProvider saltGenerator = new RNGCryptoServiceProvider();
+            byte[] salt = new byte[SaltByteSize];
+            saltGenerator.GetBytes(salt);
+            usernameInput.Text = Convert.ToBase64String(salt);
+            return Convert.ToBase64String(salt);
         }
     }
 }
