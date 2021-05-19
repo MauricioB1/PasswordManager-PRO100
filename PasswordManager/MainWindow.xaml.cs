@@ -59,25 +59,34 @@ namespace PasswordManager
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Password;
+            bool userBreak = true;
 
             var accounts = await collectionAccount.Find(_ => true).ToListAsync();
-            foreach (var a in accounts)
+            int userInt = 0;
+            while (userBreak)
             {
-                if (UserName.Equals(a.User) && Password.Equals(a.Password))
+                if (UserName.Equals(accounts[userInt].User) && Password.Equals(accounts[userInt].Password))
                 {
                     PasswordViewer passwordviewer = new PasswordViewer();
+                    passwordviewer.loggedInUser = accounts[userInt];
                     passwordviewer.Activate();
                     passwordviewer.Show();
                     Close();
                     break;
                 }
+                else if (userInt < accounts.Count-1)
+                {
+                    userInt++;
+
+
+                }
                 else
                 {
                     MessageBox.Show("The user does not exist. Please create user.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
-                    
-
+                    userBreak = false;
                 }
             }
+
 
             usernameInput.Clear();
             passwordInput.Clear();
