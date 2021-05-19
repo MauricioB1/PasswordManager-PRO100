@@ -25,7 +25,14 @@
             <Setter Property="Background" Value="#546480"/>
         </Style>
 
-        <Style TargetType="TextBox">
+        <Style TargetType="TextBox" x:Key="txtBox">
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="helvetica"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style TargetType="PasswordBox" x:Key="passBox">
             <Setter Property="Margin" Value="1"/>
             <Setter Property="Background" Value="Black"/>
             <Setter Property="Foreground" Value="White"/>
@@ -56,13 +63,13 @@
                             Margin="300,-120,300,100" 
                             Padding="1">
 
-                            <TextBox x:Name="usernameInput" />
+                            <TextBox Style="{StaticResource txtBox}" x:Name="usernameInput" />
 
                         </Border>
                         <!--!The password entry-->
                         <!--xtodo store the password-->
                         <Border Style="{StaticResource txtBoxBord}" Margin="300,-30,300,10">
-                            <TextBox x:Name="passwordInput"/>
+                            <PasswordBox Style="{StaticResource passBox}"  x:Name="passwordInput"/>
                         </Border>
                         <TextBlock Text="Password" FontFamily="helvetica" FontSize="15"
                            TextAlignment="Center" Width="104"
