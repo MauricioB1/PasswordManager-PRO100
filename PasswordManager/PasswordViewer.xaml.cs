@@ -81,15 +81,14 @@ namespace PasswordManager
                          serializer.Serialize(file, UsersList );
                      }
                  }
-             }*/
-                    using (StreamWriter file = File.CreateText(Path))
-                    {
-                        JsonSerializer serializer = new JsonSerializer();
-                        serializer.Formatting = Formatting.Indented;
-                        serializer.Serialize(file, UsersList);
-                    }
-                }
+             }
+            using (StreamWriter file = File.CreateText(Path))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Formatting = Formatting.Indented;
+                serializer.Serialize(file, UsersList);
             }
+            */
 
             UserName = null;
             Password = null;
@@ -98,8 +97,6 @@ namespace PasswordManager
             usernameInput.Text = "";
             passwordInput.Text = "";
             urlInput.Text = "";
-
-
         }
 
         public void AddEntry(AccountEntry entry)
@@ -107,7 +104,6 @@ namespace PasswordManager
             LstEntries.Items.Add(entry);
 
         }
-
 
         private string GeneratePassword()
         {

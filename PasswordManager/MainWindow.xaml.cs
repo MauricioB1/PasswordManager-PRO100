@@ -54,28 +54,17 @@ namespace PasswordManager
             InitializeComponent();
         }
 
-
-
         private async void loginInfoBut_Click(object sender, RoutedEventArgs e)
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Password;
+            int userInt = 0;
+            bool userBreak = false;
 
             var accounts = await collectionAccount.Find(_ => true).ToListAsync();
-            foreach (var a in accounts)
+            while (userBreak)
             {
-                if (UserName.Equals(a.User) && Password.Equals(a.Password))
-                        //PasswordDB.Users.find( { username: usernameInput.Text, password: passwordInput.Text } );
-                        If it does, successful log in
-                        else, incorrect password
-                            //MessageBox.Show("Incorrect Password.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
-                else username not found; prompt for new user creation
-                */
-                //var result = collectionUser.Find(u => u.UserName == "Josh");
-                //UserName = result.ToString();
-                string path = @"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\ProjectThingy\PRO100\PasswordManager\Models\json1.json";
-                string jsonString;
-                using (var reader = new StreamReader(path))
+                if (UserName.Equals(accounts[userInt].User) && Password.Equals(accounts[userInt].Password))
                 {
                     PasswordViewer passwordviewer = new PasswordViewer();
                     passwordviewer.Activate();
@@ -83,21 +72,21 @@ namespace PasswordManager
                     Close();
                     break;
                 }
+                else if (userInt < accounts.Count - 1)
+                    userInt++;
                 else
                 {
                     MessageBox.Show("The user does not exist. Please create user.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
-            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Password);
-
+                    userBreak = false;
                 }
             }
-
             usernameInput.Clear();
             passwordInput.Clear();
         }
 
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
-            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Text);
+            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Password);
             collectionAccount.InsertOne(account);
 
             usernameInput.Clear();
@@ -158,7 +147,7 @@ namespace PasswordManager
         private string HashPassword()
         {
             Salt = Convert.FromBase64String(GenerateSalt());
-            string password = passwordInput.Text;
+            string password = passwordInput.Password;
             Rfc2898DeriveBytes hashGenerator = new Rfc2898DeriveBytes(password, Salt);
             hashGenerator.IterationCount = HashingIteration;
             return Convert.ToBase64String(hashGenerator.GetBytes(HashByteSize));
