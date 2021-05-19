@@ -70,6 +70,12 @@ namespace PasswordManager
                 {
                     PasswordViewer passwordviewer = new PasswordViewer();
                     passwordviewer.loggedInUser = accounts[userInt];
+
+                    foreach(var c in accounts[userInt].Accounts)
+                    {
+                        passwordviewer.LstEntries.Items.Add(c);
+                    }
+
                     passwordviewer.Activate();
                     passwordviewer.Show();
                     Close();
@@ -96,6 +102,7 @@ namespace PasswordManager
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
             SaltHash = new string[] { GenerateSalt(), HashPassword() };
+            
             UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Password, SaltHash);
             collectionAccount.InsertOne(account);
 
