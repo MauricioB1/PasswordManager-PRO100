@@ -52,42 +52,7 @@ namespace PasswordManager
             UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Text);
             collectionAccount.InsertOne(account);
 
-            /* UserName = usernameInput.Text;
-             Password = passwordInput.Text;
-             Url = urlInput.Text;
-
-             entries.Add(new AccountEntry(UserName, Password, Url));
-
-             LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
-            LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
-
-             CurrUser.Accounts.Add(new AccountEntry(UserName, Password, Url));
-
-             foreach (var c1 in UsersList)
-             {
-                 if (c1.UserName.Equals(CurrUser.UserName))
-                 {
-
-            foreach (var c1 in UsersList)
-            {
-                if (c1.UserName.Equals(CurrUser.UserName))
-                {
-
-
-                     using (StreamWriter file = File.CreateText(Path))
-                     {
-                         JsonSerializer serializer = new JsonSerializer();
-                         serializer.Formatting = Formatting.Indented;
-                         serializer.Serialize(file, UsersList );
-                     }
-                 }
-             }*/
-                    //using (StreamWriter file = File.CreateText(Path))
-                    //{
-                    //    JsonSerializer serializer = new JsonSerializer();
-                    //    serializer.Formatting = Formatting.Indented;
-                    //    serializer.Serialize(file, UsersList);
-                    //}
+            
                 
 
             UserName = null;
@@ -177,6 +142,14 @@ namespace PasswordManager
                 }
             }
 
+        }
+
+        private void backbut_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Activate();
+            mainWindow.Show();
+            Close();
         }
     }
 
