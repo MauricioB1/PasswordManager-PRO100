@@ -16,7 +16,11 @@ namespace PasswordManager
         public string User { get; set; }
         [BsonElement("Password")]
         public string Password { get; set; }
+        [BsonElement("SaltHash")]
+        public string[] UserSalt { get; set; }
         
+
+
         public UserandPassword(string user, string password)
         {
             User = user;
