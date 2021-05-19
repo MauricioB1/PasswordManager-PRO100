@@ -56,12 +56,13 @@ namespace PasswordManager
             InitializeComponent();
         }
 
-        private async void loginInfoBut_Click(object sender, RoutedEventArgs e)
+        private void loginInfoBut_Click(object sender, RoutedEventArgs e)
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Password;
-            int userInt = 0;
-            bool userBreak = false;
+            ValidatePassword();
+            /*int userInt = 0;
+            bool userBreak = true;
 
             var accounts = await collectionAccount.Find(_ => true).ToListAsync();
             while (userBreak)
@@ -77,8 +78,6 @@ namespace PasswordManager
                 else if (userInt < accounts.Count - 1)
                 {
                     userInt++;
-
-
                 }
                 else
                 {
@@ -86,13 +85,18 @@ namespace PasswordManager
                     userBreak = false;
                 }
             }
+            */
             usernameInput.Clear();
             passwordInput.Clear();
         }
 
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
-            SaltHash = new string[] { GenerateSalt(), HashPassword() };
+            string salt = GenerateSalt();
+            byte[] PasswordSalt = Convert.FromBase64String(salt);
+            string password = passwordInput.Password;
+
+            SaltHash = new string[] {salt, HashPassword(PasswordSalt, password)};
             UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Password, SaltHash);
             collectionAccount.InsertOne(account);
 
@@ -151,20 +155,51 @@ namespace PasswordManager
         }
 
         //Takes the generated salt and password and makes a 24 bit hash
-        private string HashPassword()
+        private string HashPassword(byte[] Salt, string password)
         {
-            Salt = Convert.FromBase64String(GenerateSalt());
-            string password = passwordInput.Password;
+            //Salt = Convert.FromBase64String(GenerateSalt());
+            password = passwordInput.Password;
             Rfc2898DeriveBytes hashGenerator = new Rfc2898DeriveBytes(password, Salt);
             hashGenerator.IterationCount = HashingIteration;
             return Convert.ToBase64String(hashGenerator.GetBytes(HashByteSize));
         }
 
-        private void ValidatePassword()
+        private async void ValidatePassword()
         {
             //retrieve user's salt and hash from database
-            //add salt to current password input and hash using same hash
-            //compare the new hash with the one in the database
+            UserName = usernameInput.Text;
+            Password = passwordInput.Password;
+            int userInt = 0;
+            bool userBreak = true;
+            var accounts = await collectionAccount.Find(_ => true).ToListAsync();
+            while (userBreak)
+            {
+                if (UserName.Equals(accounts[userInt].User))
+                {
+                    byte[] salt = Convert.FromBase64String(accounts[userInt].SaltHash[0]);
+                    string hash = accounts[userInt].SaltHash[1];
+                    string HashedUserPass = HashPassword(salt, Password);
+                    if (HashedUserPass.Equals(hash))
+                    {
+                        PasswordViewer passwordviewer = new PasswordViewer();
+                        passwordviewer.Activate();
+                        passwordviewer.Show();
+                        Close();
+                        userBreak = false;
+                    }
+                    else
+                        MessageBox.Show("The password is incorrect. Please try again.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else if (userInt < accounts.Count - 1)
+                {
+                    userInt++;
+                }
+                else
+                {
+                    MessageBox.Show("The user does not exist. Please create user.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
+                    userBreak = false;
+                }
+            }
         }
     }
 }
