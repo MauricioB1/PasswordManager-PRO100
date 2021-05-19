@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PasswordManager
 {
-    class UserandPassword
+    public class UserandPassword
     {
         [BsonId]
         public ObjectId Id { get; set; }
@@ -31,12 +31,28 @@ namespace PasswordManager
 
         }
 
+        [BsonElement("Url")]
+        public string Url { get; set; }
+        [BsonElement("Accounts")]
+        public List<AccountEntry> Accounts { get; set; }
+        
         public UserandPassword(string user, string password)
         {
             User = user;
             Password = password;
-            
-         
+            Accounts = new List<AccountEntry>();
+        }
+        public UserandPassword(string user, string password, string url)
+        {
+            User = user;
+            Password = password;
+            Url = url;
+
+        }
+        public UserandPassword(List<AccountEntry> accounts)
+        {
+            Accounts = accounts;
+
         }
 
 

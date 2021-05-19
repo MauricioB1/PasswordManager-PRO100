@@ -42,6 +42,7 @@ namespace PasswordManager
         static MongoClient client = new MongoClient();
         static IMongoDatabase db = client.GetDatabase("passwordmanager");
         static IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
+        public UserandPassword loggedInUser { get; set; }
         public PasswordViewer()
         {
             InitializeComponent();
@@ -49,9 +50,22 @@ namespace PasswordManager
 
         private void addEntryBut_Click(object sender, RoutedEventArgs e)
         {
-            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Text);
-            collectionAccount.InsertOne(account);
 
+            UserName = usernameInput.Text;
+            Password = passwordInput.Text;
+            Url = urlInput.Text;
+           
+            if (UserName.Trim() != "" && Password.Trim() != "")
+            {
+                loggedInUser.Accounts.Add(new AccountEntry(UserName, Password, Url));
+                var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
+                collectionAccount.FindOneAndUpdate(
+                    item => item.Id == loggedInUser.Id,
+                    update);
+
+                //To delete,
+                //loggedInUser.Accounts.Remove(new AccountEntry(UserName, Password, Url));
+                //var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
             
                 
 
@@ -62,8 +76,6 @@ namespace PasswordManager
             usernameInput.Text = "";
             passwordInput.Text = "";
             urlInput.Text = "";
-
-
         }
 
         public void AddEntry(AccountEntry entry)
@@ -71,7 +83,6 @@ namespace PasswordManager
             LstEntries.Items.Add(entry);
 
         }
-
 
         private string GeneratePassword()
         {
@@ -116,7 +127,7 @@ namespace PasswordManager
         private void deleteEntryBut_Click(object sender, RoutedEventArgs e)
         {
             AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
-            
+
             foreach (var c1 in CurrUser.Accounts)
             {
                 if (c1.AccountUserName.Equals(entry.AccountUserName))

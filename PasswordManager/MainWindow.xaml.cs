@@ -56,25 +56,20 @@ namespace PasswordManager
             InitializeComponent();
         }
 
-
-
         private async void loginInfoBut_Click(object sender, RoutedEventArgs e)
         {
             UserName = usernameInput.Text;
-            Password = passwordInput.Password; 
-            
-
+            Password = passwordInput.Password;
             bool userBreak = true;
 
             var accounts = await collectionAccount.Find(_ => true).ToListAsync();
-
             int userInt = 0;
-
             while (userBreak)
             {
                 if (UserName.Equals(accounts[userInt].User) && Password.Equals(accounts[userInt].Password))
                 {
                     PasswordViewer passwordviewer = new PasswordViewer();
+                    passwordviewer.loggedInUser = accounts[userInt];
                     passwordviewer.Activate();
                     passwordviewer.Show();
                     Close();
@@ -92,6 +87,7 @@ namespace PasswordManager
                     userBreak = false;
                 }
             }
+
 
             usernameInput.Clear();
             passwordInput.Clear();
