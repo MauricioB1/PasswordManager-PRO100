@@ -34,6 +34,8 @@ namespace PasswordManager
 
         private string Password { get; set; }
 
+        private string[] SaltHash { get; set; }
+
         #endregion Properties
 
 
@@ -73,7 +75,11 @@ namespace PasswordManager
                     break;
                 }
                 else if (userInt < accounts.Count - 1)
+                {
                     userInt++;
+
+
+                }
                 else
                 {
                     MessageBox.Show("The user does not exist. Please create user.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -86,7 +92,8 @@ namespace PasswordManager
 
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
-            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Password);
+            SaltHash = new string[] { GenerateSalt(), HashPassword() };
+            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Password, SaltHash);
             collectionAccount.InsertOne(account);
 
             usernameInput.Clear();
