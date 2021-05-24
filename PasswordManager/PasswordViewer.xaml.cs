@@ -83,49 +83,49 @@ namespace PasswordManager
             LstEntries.Items.Add(entry);
         }
 
-        private string GeneratePassword()
-        {
-            Random random = new Random();
-            StringBuilder builder = new StringBuilder();
-            char ch;
-            for (int i = 0; i < 16; i++)
+            private string GeneratePassword()
             {
-                int randomNum = random.Next(1, 4);
-                switch (randomNum)
+                Random random = new Random();
+                StringBuilder builder = new StringBuilder();
+                char ch;
+                for (int i = 0; i < 16; i++)
                 {
-                    case 1:
-                        ch = (char)random.Next('A', 'Z');
-                        if (i % 2 == 1)
-                        {
-                            builder.Append(char.ToLower(ch));
-                        }
-                        else
+                    int randomNum = random.Next(1, 4);
+                    switch (randomNum)
+                    {
+                        case 1:
+                            ch = (char)random.Next('A', 'Z');
+                            if (i % 2 == 1)
+                            {
+                                builder.Append(char.ToLower(ch));
+                            }
+                            else
+                                builder.Append(ch);
+                            break;
+                        case 2:
+                            int RandNum = random.Next(0, 9);
+                            builder.Append(RandNum.ToString());
+                            break;
+                        case 3:
+                            char[] SymbolArray = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '{', '}', '[', ']' };
+                            ch = SymbolArray[random.Next(0, 15)];
                             builder.Append(ch);
-                        break;
-                    case 2:
-                        int RandNum = random.Next(0, 9);
-                        builder.Append(RandNum.ToString());
-                        break;
-                    case 3:
-                        char[] SymbolArray = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '{', '}', '[', ']' };
-                        ch = SymbolArray[random.Next(0, 15)];
-                        builder.Append(ch);
-                        break;
-                    default:
-                        break;
+                            break;
+                        default:
+                            break;
+                    }
                 }
+                return builder.ToString();
             }
-            return builder.ToString();
-        }
 
-        private void generatePassBut_Click(object sender, RoutedEventArgs e)
-        {
-            passwordInput.Text = GeneratePassword();
-        }
+            private void generatePassBut_Click(object sender, RoutedEventArgs e)
+            {
+                passwordInput.Text = GeneratePassword();
+            }
 
-        private void deleteEntryBut_Click(object sender, RoutedEventArgs e)
-        {
-            AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
+            private void deleteEntryBut_Click(object sender, RoutedEventArgs e)
+            {
+                AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
 
 
             loggedInUser.Accounts.Remove(entry);
@@ -135,18 +135,20 @@ namespace PasswordManager
                 item => item.Id == loggedInUser.Id,
                 update);
 
-            LstEntries.Items.Remove(entry);
+                LstEntries.Items.Remove(entry);
 
             
 
+            }
+
+            private void backbut_Click(object sender, RoutedEventArgs e)
+            {
+                MainWindow mainWindow = new MainWindow();
+                mainWindow.Activate();
+                mainWindow.Show();
+                Close();
+            }
         }
 
-        private void backbut_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Activate();
-            mainWindow.Show();
-            Close();
-        }
+
     }
-}

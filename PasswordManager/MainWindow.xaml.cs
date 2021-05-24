@@ -54,8 +54,6 @@ namespace PasswordManager
             UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Password, SaltHash);
             collectionAccount.InsertOne(account);
 
-            usernameInput.Clear();
-            passwordInput.Clear();
         }
 
         //Generates 24 bit random characters to append to the password before hashing
