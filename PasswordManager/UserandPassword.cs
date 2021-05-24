@@ -18,8 +18,8 @@ namespace PasswordManager
         public string Password { get; set; }
         [BsonElement("SaltHash")]
         public string[] SaltHash { get; set; }
-        [BsonElement("accounts")]
-        public string[] acounts { get; set; }
+        [BsonElement("Accounts")]
+        public List<AccountEntry> Accounts { get; set; }
 
 
 
@@ -28,34 +28,32 @@ namespace PasswordManager
             User = user;
             Password = password;
             SaltHash = salthash;
-
-        }
-
-        [BsonElement("Url")]
-        public string Url { get; set; }
-        [BsonElement("Accounts")]
-        public List<AccountEntry> Accounts { get; set; }
-        
-        public UserandPassword(string user, string password)
-        {
-            User = user;
-            Password = password;
             Accounts = new List<AccountEntry>();
         }
-        public UserandPassword(string user, string password, string url)
-        {
-            User = user;
-            Password = password;
-            Url = url;
 
-        }
-        public UserandPassword(List<AccountEntry> accounts)
-        {
-            Accounts = accounts;
+        //[BsonElement("Url")]
+        //public string Url { get; set; }
+        //[BsonElement("Accounts")]
+        //public List<AccountEntry> Accounts { get; set; }
+        
+        //public UserandPassword(string user, string password)
+        //{
+        //    User = user;
+        //    Password = password;
+        //    Accounts = new List<AccountEntry>();
+        //}
+        //public UserandPassword(string user, string password, string url)
+        //{
+        //    User = user;
+        //    Password = password;
+        //    Url = url;
 
-        }
+        //}
+        //public UserandPassword(List<AccountEntry> accounts)
+        //{
+        //    Accounts = accounts;
 
-
+        //}
     }
    
 }

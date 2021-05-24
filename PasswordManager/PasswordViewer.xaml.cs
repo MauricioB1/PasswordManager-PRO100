@@ -54,7 +54,7 @@ namespace PasswordManager
             UserName = usernameInput.Text;
             Password = passwordInput.Text;
             Url = urlInput.Text;
-           
+
             if (UserName.Trim() != "" && Password.Trim() != "")
             {
                 loggedInUser.Accounts.Add(new AccountEntry(UserName, Password, Url));
@@ -66,22 +66,22 @@ namespace PasswordManager
                 //To delete,
                 //loggedInUser.Accounts.Remove(new AccountEntry(UserName, Password, Url));
                 //var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
-            
-                
 
-            UserName = null;
-            Password = null;
-            Url = null;
+                LstEntries.Items.Add(new AccountEntry(UserName, Password,Url));
 
-            usernameInput.Text = "";
-            passwordInput.Text = "";
-            urlInput.Text = "";
+                UserName = null;
+                Password = null;
+                Url = null;
+
+                usernameInput.Text = "";
+                passwordInput.Text = "";
+                urlInput.Text = "";
+            }
         }
 
         public void AddEntry(AccountEntry entry)
         {
             LstEntries.Items.Add(entry);
-
         }
 
         private string GeneratePassword()
@@ -143,7 +143,6 @@ namespace PasswordManager
             {
                 if (c1.UserName.Equals(CurrUser.UserName))
                 {
-
                     using (StreamWriter file = File.CreateText(Path))
                     {
                         JsonSerializer serializer = new JsonSerializer();
@@ -152,7 +151,6 @@ namespace PasswordManager
                     }
                 }
             }
-
         }
 
         private void backbut_Click(object sender, RoutedEventArgs e)
@@ -163,6 +161,4 @@ namespace PasswordManager
             Close();
         }
     }
-
-
 }

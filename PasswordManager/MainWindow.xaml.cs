@@ -56,17 +56,17 @@ namespace PasswordManager
             InitializeComponent();
         }
 
-        private void loginInfoBut_Click(object sender, RoutedEventArgs e)
+        private async void loginInfoBut_Click(object sender, RoutedEventArgs e)
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Password;
-            bool userBreak = true;
-            ValidatePassword();
-            /*int userInt = 0;
+            //bool userBreak = true;
+            //ValidatePassword();
+            int userInt = 0;
             bool userBreak = true;
 
             var accounts = await collectionAccount.Find(_ => true).ToListAsync();
-            int userInt = 0;
+            //int userInt = 0;
             while (userBreak)
             {
                 if (UserName.Equals(accounts[userInt].User) && Password.Equals(accounts[userInt].Password))
@@ -88,18 +88,17 @@ namespace PasswordManager
                     userBreak = false;
                 }
             }
-            */
+            
             usernameInput.Clear();
             passwordInput.Clear();
         }
 
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
-            string salt = GenerateSalt();
-            byte[] PasswordSalt = Convert.FromBase64String(salt);
+            byte[] PasswordSalt = GenerateSalt();
             string password = passwordInput.Password;
 
-            SaltHash = new string[] {salt, HashPassword(PasswordSalt, password)};
+            SaltHash = new string[] { PasswordSalt, HashPassword(PasswordSalt, password) };
             UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Password, SaltHash);
             collectionAccount.InsertOne(account);
 
@@ -148,13 +147,12 @@ namespace PasswordManager
             }
         }
 
-
         //Generates 24 bit random characters to append to the password before hashing
-        private string GenerateSalt()
+        private byte[] GenerateSalt()
         {
             RNGCryptoServiceProvider saltGenerator = new RNGCryptoServiceProvider();
             saltGenerator.GetBytes(Salt);
-            return Convert.ToBase64String(Salt);
+            return Salt;
         }
 
         //Takes the generated salt and password and makes a 24 bit hash
@@ -163,6 +161,7 @@ namespace PasswordManager
             //Salt = Convert.FromBase64String(GenerateSalt());
             password = passwordInput.Password;
             Rfc2898DeriveBytes hashGenerator = new Rfc2898DeriveBytes(password, Salt);
+            //PBKDF2
             hashGenerator.IterationCount = HashingIteration;
             return Convert.ToBase64String(hashGenerator.GetBytes(HashByteSize));
         }
