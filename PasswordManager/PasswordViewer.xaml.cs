@@ -67,7 +67,7 @@ namespace PasswordManager
                 //loggedInUser.Accounts.Remove(new AccountEntry(UserName, Password, Url));
                 //var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
 
-                LstEntries.Items.Add(new AccountEntry(UserName, Password,Url));
+                LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
 
                 UserName = null;
                 Password = null;
@@ -78,7 +78,6 @@ namespace PasswordManager
                 urlInput.Text = "";
             }
         }
-
         public void AddEntry(AccountEntry entry)
         {
             LstEntries.Items.Add(entry);
@@ -128,29 +127,18 @@ namespace PasswordManager
         {
             AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
 
-            foreach (var c1 in CurrUser.Accounts)
-            {
-                if (c1.AccountUserName.Equals(entry.AccountUserName))
-                {
-                    CurrUser.Accounts.Remove(c1);
-                    break;
-                }
-            }
+
+            loggedInUser.Accounts.Remove(entry);
+
+            var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
+            collectionAccount.FindOneAndUpdate(
+                item => item.Id == loggedInUser.Id,
+                update);
 
             LstEntries.Items.Remove(entry);
 
-            foreach (var c1 in UsersList)
-            {
-                if (c1.UserName.Equals(CurrUser.UserName))
-                {
-                    using (StreamWriter file = File.CreateText(Path))
-                    {
-                        JsonSerializer serializer = new JsonSerializer();
-                        serializer.Formatting = Formatting.Indented;
-                        serializer.Serialize(file, UsersList);
-                    }
-                }
-            }
+            
+
         }
 
         private void backbut_Click(object sender, RoutedEventArgs e)
