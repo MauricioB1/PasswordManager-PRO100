@@ -54,7 +54,7 @@ namespace PasswordManager
             UserName = usernameInput.Text;
             Password = passwordInput.Text;
             Url = urlInput.Text;
-           
+
             if (UserName.Trim() != "" && Password.Trim() != "")
             {
                 loggedInUser.Accounts.Add(new AccountEntry(UserName, Password, Url));
@@ -66,103 +66,104 @@ namespace PasswordManager
                 //To delete,
                 //loggedInUser.Accounts.Remove(new AccountEntry(UserName, Password, Url));
                 //var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
-            
-                
 
-            UserName = null;
-            Password = null;
-            Url = null;
+                LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
 
-            usernameInput.Text = "";
-            passwordInput.Text = "";
-            urlInput.Text = "";
-        }
+                UserName = null;
+                Password = null;
+                Url = null;
 
-        public void AddEntry(AccountEntry entry)
-        {
-            LstEntries.Items.Add(entry);
-
-        }
-
-        private string GeneratePassword()
-        {
-            Random random = new Random();
-            StringBuilder builder = new StringBuilder();
-            char ch;
-            for (int i = 0; i < 16; i++)
-            {
-                int randomNum = random.Next(1, 4);
-                switch (randomNum)
-                {
-                    case 1:
-                        ch = (char)random.Next('A', 'Z');
-                        if (i % 2 == 1)
-                        {
-                            builder.Append(char.ToLower(ch));
-                        }
-                        else
-                            builder.Append(ch);
-                        break;
-                    case 2:
-                        int RandNum = random.Next(0, 9);
-                        builder.Append(RandNum.ToString());
-                        break;
-                    case 3:
-                        char[] SymbolArray = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '{', '}', '[', ']' };
-                        ch = SymbolArray[random.Next(0, 15)];
-                        builder.Append(ch);
-                        break;
-                    default:
-                        break;
-                }
+                usernameInput.Text = "";
+                passwordInput.Text = "";
+                urlInput.Text = "";
             }
-            return builder.ToString();
         }
 
-        private void generatePassBut_Click(object sender, RoutedEventArgs e)
-        {
-            passwordInput.Text = GeneratePassword();
-        }
-
-        private void deleteEntryBut_Click(object sender, RoutedEventArgs e)
-        {
-            AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
-
-            foreach (var c1 in CurrUser.Accounts)
+            public void AddEntry(AccountEntry entry)
             {
-                if (c1.AccountUserName.Equals(entry.AccountUserName))
-                {
-                    CurrUser.Accounts.Remove(c1);
-                    break;
-                }
+                LstEntries.Items.Add(entry);
+
             }
 
-            LstEntries.Items.Remove(entry);
-
-            foreach (var c1 in UsersList)
+            private string GeneratePassword()
             {
-                if (c1.UserName.Equals(CurrUser.UserName))
+                Random random = new Random();
+                StringBuilder builder = new StringBuilder();
+                char ch;
+                for (int i = 0; i < 16; i++)
                 {
-
-                    using (StreamWriter file = File.CreateText(Path))
+                    int randomNum = random.Next(1, 4);
+                    switch (randomNum)
                     {
-                        JsonSerializer serializer = new JsonSerializer();
-                        serializer.Formatting = Formatting.Indented;
-                        serializer.Serialize(file, UsersList);
+                        case 1:
+                            ch = (char)random.Next('A', 'Z');
+                            if (i % 2 == 1)
+                            {
+                                builder.Append(char.ToLower(ch));
+                            }
+                            else
+                                builder.Append(ch);
+                            break;
+                        case 2:
+                            int RandNum = random.Next(0, 9);
+                            builder.Append(RandNum.ToString());
+                            break;
+                        case 3:
+                            char[] SymbolArray = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '{', '}', '[', ']' };
+                            ch = SymbolArray[random.Next(0, 15)];
+                            builder.Append(ch);
+                            break;
+                        default:
+                            break;
                     }
                 }
+                return builder.ToString();
             }
 
+            private void generatePassBut_Click(object sender, RoutedEventArgs e)
+            {
+                passwordInput.Text = GeneratePassword();
+            }
+
+            private void deleteEntryBut_Click(object sender, RoutedEventArgs e)
+            {
+                AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
+
+                foreach (var c1 in CurrUser.Accounts)
+                {
+                    if (c1.AccountUserName.Equals(entry.AccountUserName))
+                    {
+                        CurrUser.Accounts.Remove(c1);
+                        break;
+                    }
+                }
+
+                LstEntries.Items.Remove(entry);
+
+                foreach (var c1 in UsersList)
+                {
+                    if (c1.UserName.Equals(CurrUser.UserName))
+                    {
+
+                        using (StreamWriter file = File.CreateText(Path))
+                        {
+                            JsonSerializer serializer = new JsonSerializer();
+                            serializer.Formatting = Formatting.Indented;
+                            serializer.Serialize(file, UsersList);
+                        }
+                    }
+                }
+
+            }
+
+            private void backbut_Click(object sender, RoutedEventArgs e)
+            {
+                MainWindow mainWindow = new MainWindow();
+                mainWindow.Activate();
+                mainWindow.Show();
+                Close();
+            }
         }
 
-        private void backbut_Click(object sender, RoutedEventArgs e)
-        {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Activate();
-            mainWindow.Show();
-            Close();
-        }
+
     }
-
-
-}

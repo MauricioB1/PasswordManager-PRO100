@@ -56,17 +56,15 @@ namespace PasswordManager
             InitializeComponent();
         }
 
-        private void loginInfoBut_Click(object sender, RoutedEventArgs e)
+        private async void loginInfoBut_Click(object sender, RoutedEventArgs e)
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Password;
+            //ValidatePassword();
             bool userBreak = true;
-            ValidatePassword();
-            /*int userInt = 0;
-            bool userBreak = true;
+            int userInt = 0;
 
             var accounts = await collectionAccount.Find(_ => true).ToListAsync();
-            int userInt = 0;
             while (userBreak)
             {
                 if (UserName.Equals(accounts[userInt].User) && Password.Equals(accounts[userInt].Password))
@@ -84,11 +82,11 @@ namespace PasswordManager
                 }
                 else
                 {
-                    MessageBox.Show("The user does not exist. Please create user.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show("The password is incorrect.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
                     userBreak = false;
                 }
             }
-            */
+
             usernameInput.Clear();
             passwordInput.Clear();
         }
@@ -103,8 +101,6 @@ namespace PasswordManager
             UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Password, SaltHash);
             collectionAccount.InsertOne(account);
 
-            usernameInput.Clear();
-            passwordInput.Clear();
         }
 
         //This saves the user info using the User class, serializes it to Json and it saves it to a specified file
