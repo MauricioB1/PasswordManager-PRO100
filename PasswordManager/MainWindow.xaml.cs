@@ -5,9 +5,6 @@ using System.Security.Cryptography;
 
 namespace PasswordManager
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
 
@@ -19,8 +16,6 @@ namespace PasswordManager
 
         private string[] SaltHash { get; set; }
 
-        #endregion Properties
-
         static MongoClient client = new MongoClient();
         static IMongoDatabase db = client.GetDatabase("passwordmanager");
         static IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
@@ -29,6 +24,8 @@ namespace PasswordManager
         private const int HashByteSize = 24;
         private const int HashingIteration = 10000;
         private byte[] Salt = new byte[SaltByteSize];
+
+        #endregion Properties
 
         public MainWindow()
         {
@@ -39,7 +36,10 @@ namespace PasswordManager
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Password;
-            ValidatePassword();
+            if (!(string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) || string.IsNullOrWhiteSpace(UserName) || string.IsNullOrWhiteSpace(Password)))
+                ValidatePassword();
+            else
+                MessageBox.Show("Username and Password cannot be empty","Invalid", MessageBoxButton.OK, MessageBoxImage.Warning);
             usernameInput.Clear();
             passwordInput.Clear();
         }
@@ -51,9 +51,8 @@ namespace PasswordManager
             string password = passwordInput.Password;
 
             SaltHash = new string[] { salt , HashPassword(PasswordSalt, password) };
-            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Password, SaltHash);
+            UserandPassword account = new UserandPassword(usernameInput.Text, SaltHash);
             collectionAccount.InsertOne(account);
-
         }
 
         //Generates 24 bit random characters to append to the password before hashing
