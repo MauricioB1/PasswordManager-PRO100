@@ -7,7 +7,6 @@ namespace PasswordManager
 {
     public partial class MainWindow : Window
     {
-
         #region Properties
 
         private string UserName { get; set; }
@@ -46,13 +45,21 @@ namespace PasswordManager
 
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
-            string salt = GenerateSalt();
-            byte[] PasswordSalt = Convert.FromBase64String(salt);
-            string password = passwordInput.Password;
+            UserName = usernameInput.Text;
+            Password = passwordInput.Password;
+            if (!(string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) || string.IsNullOrWhiteSpace(UserName) || string.IsNullOrWhiteSpace(Password)))
+            {
+                string salt = GenerateSalt();
+                byte[] PasswordSalt = Convert.FromBase64String(salt);
+                string password = Password;
 
-            SaltHash = new string[] { salt , HashPassword(PasswordSalt, password) };
-            UserandPassword account = new UserandPassword(usernameInput.Text, SaltHash);
-            collectionAccount.InsertOne(account);
+                SaltHash = new string[] { salt, HashPassword(PasswordSalt, password) };
+                UserandPassword account = new UserandPassword(UserName, SaltHash);
+                collectionAccount.InsertOne(account);
+                loginInfoBut_Click(sender, e);
+            }
+            else
+                MessageBox.Show("Username and Password cannot be empty", "Invalid", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         //Generates 24 bit random characters to append to the password before hashing

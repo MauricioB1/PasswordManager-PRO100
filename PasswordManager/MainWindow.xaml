@@ -82,6 +82,7 @@
                             Background="#546480"
                             Click="loginInfoBut_Click"
                             BorderThickness="0"
+                            IsDefault="true"
                             />
                         </Border>
                         <Border Style="{StaticResource butBord}" Margin="350 -150 350 170" >
