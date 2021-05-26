@@ -138,8 +138,6 @@ namespace PasswordManager
 
             LstEntries.Items.Remove(entry);
 
-            
-
         }
 
         private void backbut_Click(object sender, RoutedEventArgs e)
@@ -149,6 +147,17 @@ namespace PasswordManager
             mainWindow.Show();
             Close();
         }
+
+
+        private void Copy_Paste(object Sender)
+        {
+            var item = LstEntries.SelectedItem;
+
+           
+            
+
+        }
+
     }
 
 
