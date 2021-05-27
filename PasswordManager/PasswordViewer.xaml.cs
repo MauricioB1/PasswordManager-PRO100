@@ -1,28 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using MongoDB.Driver;
-using Newtonsoft.Json;
 
 namespace PasswordManager
 {
-    /// <summary>
-    /// Interaction logic for PasswordViewer.xaml
-    /// </summary>
     public partial class PasswordViewer : Window
     {
-
         #region Properties
 
         public User CurrUser { get; set; }
@@ -37,12 +22,11 @@ namespace PasswordManager
 
         private string Url { get; set; }
 
-        #endregion Properties
-
         static MongoClient client = new MongoClient();
         static IMongoDatabase db = client.GetDatabase("passwordmanager");
         static IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
         public UserandPassword loggedInUser { get; set; }
+        #endregion Properties
         public PasswordViewer()
         {
             InitializeComponent();
@@ -50,7 +34,6 @@ namespace PasswordManager
 
         private void addEntryBut_Click(object sender, RoutedEventArgs e)
         {
-
             UserName = usernameInput.Text;
             Password = passwordInput.Text;
             Url = urlInput.Text;
@@ -62,10 +45,6 @@ namespace PasswordManager
                 collectionAccount.FindOneAndUpdate(
                     item => item.Id == loggedInUser.Id,
                     update);
-
-                //To delete,
-                //loggedInUser.Accounts.Remove(new AccountEntry(UserName, Password, Url));
-                //var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
 
                 LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
 
@@ -81,7 +60,6 @@ namespace PasswordManager
         public void AddEntry(AccountEntry entry)
         {
             LstEntries.Items.Add(entry);
-
         }
 
         private string GeneratePassword()
@@ -128,16 +106,13 @@ namespace PasswordManager
         {
             AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
 
-
             loggedInUser.Accounts.Remove(entry);
 
             var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
             collectionAccount.FindOneAndUpdate(
                 item => item.Id == loggedInUser.Id,
                 update);
-
             LstEntries.Items.Remove(entry);
-
         }
 
         private void backbut_Click(object sender, RoutedEventArgs e)
@@ -159,6 +134,4 @@ namespace PasswordManager
         }
 
     }
-
-
 }

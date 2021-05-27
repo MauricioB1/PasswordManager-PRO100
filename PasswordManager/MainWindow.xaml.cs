@@ -1,30 +1,10 @@
 ﻿using MongoDB.Driver;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Newtonsoft;
-using Newtonsoft.Json;
-using MongoDB.Bson;
-using System.Text.Json;
 using System.Security.Cryptography;
 
 namespace PasswordManager
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
 
@@ -39,8 +19,6 @@ namespace PasswordManager
         static MongoClient client = new MongoClient();
         static IMongoDatabase db = client.GetDatabase("passwordmanager");
         static IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
-
-        static IMongoCollection<User> collectionUser = db.GetCollection<User>("users");
 
         private const int SaltByteSize = 24;
         private const int HashByteSize = 24;
@@ -59,29 +37,55 @@ namespace PasswordManager
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Password;
-            
-            ValidatePassword();
+            if (!(string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) || string.IsNullOrWhiteSpace(UserName) || string.IsNullOrWhiteSpace(Password)))
+                ValidatePassword();
+            else
+                MessageBox.Show("Username and Password cannot be empty","Invalid", MessageBoxButton.OK, MessageBoxImage.Warning);
 
+            var accounts = await collectionAccount.Find(_ => true).ToListAsync();
+            int userInt = 0;
+            while (userBreak)
+            {
+                if (UserName.Equals(accounts[userInt].User) && Password.Equals(accounts[userInt].Password))
+                    passwordviewer.loggedInUser = accounts[userInt];
 
-            usernameInput.Clear();
-            passwordInput.Clear();
-        }
-
-        private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
-        {
-            
-
-            string salt = GenerateSalt();
-            byte[] PasswordSalt = Convert.FromBase64String(salt);
-            string password = passwordInput.Password;
-
-            SaltHash = new string[] { salt, HashPassword(PasswordSalt, password) };
+                    foreach(var c in accounts[userInt].Accounts)
+                    {
+            SaltHash = new string[] { salt , HashPassword(PasswordSalt, password) };
             UserandPassword account = new UserandPassword(usernameInput.Text, SaltHash);
-            collectionAccount.InsertOne(account);
 
-            usernameInput.Clear();
-            passwordInput.Clear();
         }
+
+                Accounts = newAccounts
+            }, Formatting.Indented);
+
+            //You'd have to change the file location for now to a place you can find
+            string path = @"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\ProjectThingy\PRO100\PasswordManager\Models\json1.json";
+
+            string rFile;
+
+            try
+            {
+                rFile = File.ReadAllText(path);
+
+                rFile = rFile.Substring(0, rFile.Length - 3);
+
+                rFile += ",";
+
+            }
+            catch (Exception)
+            {
+                using (File.CreateText(path))
+                    Console.WriteLine("OOP");
+                rFile = "[";
+            }
+
+            using (StreamWriter file = File.CreateText(path))
+            {
+                file.WriteLine(rFile + users + "]");
+            }
+        }
+
 
         //Generates 24 bit random characters to append to the password before hashing
         private string GenerateSalt()
@@ -101,7 +105,6 @@ namespace PasswordManager
 
         private async void ValidatePassword()
         {
-            //retrieve user's salt and hash from database
             UserName = usernameInput.Text;
             Password = passwordInput.Password;
             int userInt = 0;
