@@ -1,28 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using MongoDB.Driver;
-using Newtonsoft.Json;
 
 namespace PasswordManager
 {
-    /// <summary>
-    /// Interaction logic for PasswordViewer.xaml
-    /// </summary>
     public partial class PasswordViewer : Window
     {
-
         #region Properties
 
         public User CurrUser { get; set; }
@@ -37,12 +22,11 @@ namespace PasswordManager
 
         private string Url { get; set; }
 
-        #endregion Properties
-
         static MongoClient client = new MongoClient();
         static IMongoDatabase db = client.GetDatabase("passwordmanager");
         static IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
         public UserandPassword loggedInUser { get; set; }
+        #endregion Properties
         public PasswordViewer()
         {
             InitializeComponent();
@@ -50,7 +34,6 @@ namespace PasswordManager
 
         private void addEntryBut_Click(object sender, RoutedEventArgs e)
         {
-
             UserName = usernameInput.Text;
             Password = passwordInput.Text;
             Url = urlInput.Text;
@@ -62,10 +45,6 @@ namespace PasswordManager
                 collectionAccount.FindOneAndUpdate(
                     item => item.Id == loggedInUser.Id,
                     update);
-
-                //To delete,
-                //loggedInUser.Accounts.Remove(new AccountEntry(UserName, Password, Url));
-                //var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
 
                 LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
 
@@ -81,53 +60,51 @@ namespace PasswordManager
         public void AddEntry(AccountEntry entry)
         {
             LstEntries.Items.Add(entry);
+        }
 
-            }
-
-            private string GeneratePassword()
+        private string GeneratePassword()
+        {
+            Random random = new Random();
+            StringBuilder builder = new StringBuilder();
+            char ch;
+            for (int i = 0; i < 16; i++)
             {
-                Random random = new Random();
-                StringBuilder builder = new StringBuilder();
-                char ch;
-                for (int i = 0; i < 16; i++)
+                int randomNum = random.Next(1, 4);
+                switch (randomNum)
                 {
-                    int randomNum = random.Next(1, 4);
-                    switch (randomNum)
-                    {
-                        case 1:
-                            ch = (char)random.Next('A', 'Z');
-                            if (i % 2 == 1)
-                            {
-                                builder.Append(char.ToLower(ch));
-                            }
-                            else
-                                builder.Append(ch);
-                            break;
-                        case 2:
-                            int RandNum = random.Next(0, 9);
-                            builder.Append(RandNum.ToString());
-                            break;
-                        case 3:
-                            char[] SymbolArray = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '{', '}', '[', ']' };
-                            ch = SymbolArray[random.Next(0, 15)];
+                    case 1:
+                        ch = (char)random.Next('A', 'Z');
+                        if (i % 2 == 1)
+                        {
+                            builder.Append(char.ToLower(ch));
+                        }
+                        else
                             builder.Append(ch);
-                            break;
-                        default:
-                            break;
-                    }
+                        break;
+                    case 2:
+                        int RandNum = random.Next(0, 9);
+                        builder.Append(RandNum.ToString());
+                        break;
+                    case 3:
+                        char[] SymbolArray = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '{', '}', '[', ']' };
+                        ch = SymbolArray[random.Next(0, 15)];
+                        builder.Append(ch);
+                        break;
+                    default:
+                        break;
                 }
-                return builder.ToString();
             }
+            return builder.ToString();
+        }
 
-            private void generatePassBut_Click(object sender, RoutedEventArgs e)
-            {
-                passwordInput.Text = GeneratePassword();
-            }
+        private void generatePassBut_Click(object sender, RoutedEventArgs e)
+        {
+            passwordInput.Text = GeneratePassword();
+        }
 
-            private void deleteEntryBut_Click(object sender, RoutedEventArgs e)
-            {
-                AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
-
+        private void deleteEntryBut_Click(object sender, RoutedEventArgs e)
+        {
+            AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
 
             loggedInUser.Accounts.Remove(entry);
 
@@ -135,21 +112,27 @@ namespace PasswordManager
             collectionAccount.FindOneAndUpdate(
                 item => item.Id == loggedInUser.Id,
                 update);
+            LstEntries.Items.Remove(entry);
+        }
 
-                LstEntries.Items.Remove(entry);
+        private void backbut_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Activate();
+            mainWindow.Show();
+            Close();
+        }
 
-            
+        private void UserTextBlock_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
 
-            }
+            var item = LstEntries;
+            item.
 
-            private void backbut_Click(object sender, RoutedEventArgs e)
-            {
-                MainWindow mainWindow = new MainWindow();
-                mainWindow.Activate();
-                mainWindow.Show();
-                Close();
-            }
+            Clipboard.SetText(item);
+
         }
 
 
     }
+}

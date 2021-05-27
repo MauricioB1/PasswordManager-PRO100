@@ -1,30 +1,9 @@
 ﻿using MongoDB.Driver;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Newtonsoft;
-using Newtonsoft.Json;
-using MongoDB.Bson;
-using System.Text.Json;
 using System.Security.Cryptography;
 namespace PasswordManager
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    
     public partial class MainWindow : Window
     {
         #region Properties
@@ -35,19 +14,16 @@ namespace PasswordManager
 
         private string[] SaltHash { get; set; }
 
-        #endregion Properties
-
-
         static MongoClient client = new MongoClient();
         static IMongoDatabase db = client.GetDatabase("passwordmanager");
         static IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
-
-        static IMongoCollection<User> collectionUser = db.GetCollection<User>("users");
 
         private const int SaltByteSize = 24;
         private const int HashByteSize = 24;
         private const int HashingIteration = 10000;
         private byte[] Salt = new byte[SaltByteSize];
+
+        #endregion Properties
 
 
         public MainWindow()
@@ -58,8 +34,10 @@ namespace PasswordManager
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Password;
-
-            ValidatePassword();
+            if (!(string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) || string.IsNullOrWhiteSpace(UserName) || string.IsNullOrWhiteSpace(Password)))
+                ValidatePassword();
+            else
+                MessageBox.Show("Username and Password cannot be empty","Invalid", MessageBoxButton.OK, MessageBoxImage.Warning);
 
             usernameInput.Clear();
             passwordInput.Clear();
@@ -67,20 +45,23 @@ namespace PasswordManager
       
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
-            //SaltHash = new string[] { GenerateSalt(), HashPassword() };
+            UserName = usernameInput.Text;
+            Password = passwordInput.Password;
+            if (!(string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) || string.IsNullOrWhiteSpace(UserName) || string.IsNullOrWhiteSpace(Password)))
+            {
+                string salt = GenerateSalt();
+                byte[] PasswordSalt = Convert.FromBase64String(salt);
+                string password = Password;
 
-            string salt = GenerateSalt();
-            byte[] PasswordSalt = Convert.FromBase64String(salt);
-            string password = passwordInput.Password;
-
-            SaltHash = new string[] { salt, HashPassword(PasswordSalt, password) };
-            UserandPassword account = new UserandPassword(usernameInput.Text, SaltHash);
-            collectionAccount.InsertOne(account);
-
+                SaltHash = new string[] { salt, HashPassword(PasswordSalt, password) };
+                UserandPassword account = new UserandPassword(UserName, SaltHash);
+                collectionAccount.InsertOne(account);
+                loginInfoBut_Click(sender, e);
+            }
+            else
+                MessageBox.Show("Username and Password cannot be empty", "Invalid", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
-        //This saves the user info using the User class, serializes it to Json and it saves it to a specified file
-        //This will change to save it to MongoDB
 
 
         //Generates 24 bit random characters to append to the password before hashing
@@ -94,8 +75,6 @@ namespace PasswordManager
         //Takes the generated salt and password and makes a 24 bit hash
         private string HashPassword(byte[] Salt, string password)
         {
-            //Salt = Convert.FromBase64String(GenerateSalt());
-            //password = passwordInput.Password;
             Rfc2898DeriveBytes hashGenerator = new Rfc2898DeriveBytes(password, Salt);
             hashGenerator.IterationCount = HashingIteration;
             return Convert.ToBase64String(hashGenerator.GetBytes(HashByteSize));
@@ -103,7 +82,6 @@ namespace PasswordManager
 
         private async void ValidatePassword()
         {
-            //retrieve user's salt and hash from database
             UserName = usernameInput.Text;
             Password = passwordInput.Password;
             int userInt = 0;

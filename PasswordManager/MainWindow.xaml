@@ -80,8 +80,9 @@
                             Content="Login"
                             Foreground="Black"
                             Background="#546480"
-                            BorderThickness="0" 
-                            IsDefault="True" Click="loginInfoBut_Click"
+                            Click="loginInfoBut_Click"
+                            BorderThickness="0"
+                            IsDefault="true"
                             />
                         </Border>
                         <Border Style="{StaticResource butBord}" Margin="350 -150 350 170" >
