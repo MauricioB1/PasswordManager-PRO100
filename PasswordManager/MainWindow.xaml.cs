@@ -7,7 +7,6 @@ namespace PasswordManager
 {
     public partial class MainWindow : Window
     {
-
         #region Properties
 
         private string UserName { get; set; }
@@ -50,16 +49,16 @@ namespace PasswordManager
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Password;
-
             if (!(string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) || string.IsNullOrWhiteSpace(UserName) || string.IsNullOrWhiteSpace(Password)))
             {
                 string salt = GenerateSalt();
                 byte[] PasswordSalt = Convert.FromBase64String(salt);
-                string password = passwordInput.Password;
+                string password = Password;
 
                 SaltHash = new string[] { salt, HashPassword(PasswordSalt, password) };
-                UserandPassword account = new UserandPassword(usernameInput.Text, SaltHash);
+                UserandPassword account = new UserandPassword(UserName, SaltHash);
                 collectionAccount.InsertOne(account);
+                loginInfoBut_Click(sender, e);
             }
             else
                 MessageBox.Show("Username and Password cannot be empty", "Invalid", MessageBoxButton.OK, MessageBoxImage.Warning);
