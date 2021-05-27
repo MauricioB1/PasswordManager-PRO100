@@ -14,8 +14,7 @@ namespace PasswordManager
         public ObjectId Id { get; set; }
         [BsonElement("User")]
         public string User { get; set; }
-        [BsonElement("Password")]
-        public string Password { get; set; }
+       
         [BsonElement("SaltHash")]
         public string[] SaltHash { get; set; }
         //[BsonElement("accounts")]
@@ -25,10 +24,9 @@ namespace PasswordManager
 
 
 
-        public UserandPassword(string user, string password, string[] salthash)
+        public UserandPassword(string user, string[] salthash)
         {
             User = user;
-            Password = password;
             SaltHash = salthash;
             Accounts = new List<AccountEntry>();
         }

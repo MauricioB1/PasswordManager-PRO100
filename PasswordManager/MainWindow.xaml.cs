@@ -19,15 +19,14 @@ using Newtonsoft.Json;
 using MongoDB.Bson;
 using System.Text.Json;
 using System.Security.Cryptography;
-
 namespace PasswordManager
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    
     public partial class MainWindow : Window
     {
-
         #region Properties
 
         private string UserName { get; set; }
@@ -55,102 +54,33 @@ namespace PasswordManager
         {
             InitializeComponent();
         }
-
-        private async void loginInfoBut_Click(object sender, RoutedEventArgs e)
+        private void loginInfoBut_Click(object sender, RoutedEventArgs e)
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Password;
-            //ValidatePassword();
-            bool userBreak = true;
-            int userInt = 0;
 
-            var accounts = await collectionAccount.Find(_ => true).ToListAsync();
-            while (userBreak)
-            {
-                if (UserName.Equals(accounts[userInt].User) && Password.Equals(accounts[userInt].Password))
-                {
-                    PasswordViewer passwordviewer = new PasswordViewer();
-                    passwordviewer.loggedInUser = accounts[userInt];
-
-                    foreach(var c in accounts[userInt].Accounts)
-                    {
-                        passwordviewer.LstEntries.Items.Add(c);
-                    }
-
-                    passwordviewer.Activate();
-                    passwordviewer.Show();
-                    Close();
-                    break;
-                }
-                else if (userInt < accounts.Count - 1)
-                {
-                    userInt++;
-                }
-                else
-                {
-                    MessageBox.Show("The password is incorrect.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
-                    userBreak = false;
-                }
-            }
+            ValidatePassword();
 
             usernameInput.Clear();
             passwordInput.Clear();
         }
-
+      
         private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
-            SaltHash = new string[] { GenerateSalt(), HashPassword() };
-            
+            //SaltHash = new string[] { GenerateSalt(), HashPassword() };
+
             string salt = GenerateSalt();
             byte[] PasswordSalt = Convert.FromBase64String(salt);
             string password = passwordInput.Password;
 
-            SaltHash = new string[] {salt, HashPassword(PasswordSalt, password)};
-            UserandPassword account = new UserandPassword(usernameInput.Text, passwordInput.Password, SaltHash);
+            SaltHash = new string[] { salt, HashPassword(PasswordSalt, password) };
+            UserandPassword account = new UserandPassword(usernameInput.Text, SaltHash);
             collectionAccount.InsertOne(account);
 
         }
 
         //This saves the user info using the User class, serializes it to Json and it saves it to a specified file
         //This will change to save it to MongoDB
-        private void SaveUserInfo()
-        {
-
-            List<AccountEntry> newAccounts = new List<AccountEntry>();
-
-            var users = JsonConvert.SerializeObject(new User
-            {
-                UserName = this.UserName,
-                Password = Password,
-                Accounts = newAccounts
-            }, Formatting.Indented);
-
-            //You'd have to change the file location for now to a place you can find
-            string path = @"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\ProjectThingy\PRO100\PasswordManager\Models\json1.json";
-
-            string rFile;
-
-            try
-            {
-                rFile = File.ReadAllText(path);
-
-                rFile = rFile.Substring(0, rFile.Length - 3);
-
-                rFile += ",";
-
-            }
-            catch (Exception)
-            {
-                using (File.CreateText(path))
-                    Console.WriteLine("OOP");
-                rFile = "[";
-            }
-
-            using (StreamWriter file = File.CreateText(path))
-            {
-                file.WriteLine(rFile + users + "]");
-            }
-        }
 
 
         //Generates 24 bit random characters to append to the password before hashing
@@ -165,7 +95,7 @@ namespace PasswordManager
         private string HashPassword(byte[] Salt, string password)
         {
             //Salt = Convert.FromBase64String(GenerateSalt());
-            password = passwordInput.Password;
+            //password = passwordInput.Password;
             Rfc2898DeriveBytes hashGenerator = new Rfc2898DeriveBytes(password, Salt);
             hashGenerator.IterationCount = HashingIteration;
             return Convert.ToBase64String(hashGenerator.GetBytes(HashByteSize));
@@ -189,13 +119,23 @@ namespace PasswordManager
                     if (HashedUserPass.Equals(hash))
                     {
                         PasswordViewer passwordviewer = new PasswordViewer();
+                        passwordviewer.loggedInUser = accounts[userInt];
+
+                        foreach (var c in accounts[userInt].Accounts)
+                        {
+                            passwordviewer.LstEntries.Items.Add(c);
+                        }
+
                         passwordviewer.Activate();
                         passwordviewer.Show();
                         Close();
                         userBreak = false;
                     }
                     else
+                    {
                         MessageBox.Show("The password is incorrect. Please try again.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
+                        userBreak = false;
+                    }
                 }
                 else if (userInt < accounts.Count - 1)
                 {
@@ -206,6 +146,18 @@ namespace PasswordManager
                     MessageBox.Show("The user does not exist. Please create user.", "Login", MessageBoxButton.OK, MessageBoxImage.Error);
                     userBreak = false;
                 }
+            }
+        }
+
+        private void CheckBox_Changed(object sender, RoutedEventArgs e)
+        {
+            if (showPassBut.IsChecked == true)
+            {
+                passwordInput.Visibility = System.Windows.Visibility.Visible;
+            }
+            else
+            {
+                passwordInput.Visibility = System.Windows.Visibility.Hidden;
             }
         }
     }
