@@ -42,49 +42,29 @@ namespace PasswordManager
             else
                 MessageBox.Show("Username and Password cannot be empty","Invalid", MessageBoxButton.OK, MessageBoxImage.Warning);
 
-            var accounts = await collectionAccount.Find(_ => true).ToListAsync();
-            int userInt = 0;
-            while (userBreak)
-            {
-                if (UserName.Equals(accounts[userInt].User) && Password.Equals(accounts[userInt].Password))
-                    passwordviewer.loggedInUser = accounts[userInt];
-
-                    foreach(var c in accounts[userInt].Accounts)
-                    {
-            SaltHash = new string[] { salt , HashPassword(PasswordSalt, password) };
-            UserandPassword account = new UserandPassword(usernameInput.Text, SaltHash);
-
+            usernameInput.Clear();
+            passwordInput.Clear();
         }
 
-                Accounts = newAccounts
-            }, Formatting.Indented);
+        private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
+        {
+            UserName = usernameInput.Text;
+            Password = passwordInput.Password;
 
-            //You'd have to change the file location for now to a place you can find
-            string path = @"C:\Neumont College\Year2\QuarterSeven\IntroductorySoftwareProjects\ProjectThingy\PRO100\PasswordManager\Models\json1.json";
-
-            string rFile;
-
-            try
+            if (!(string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) || string.IsNullOrWhiteSpace(UserName) || string.IsNullOrWhiteSpace(Password)))
             {
-                rFile = File.ReadAllText(path);
+                string salt = GenerateSalt();
+                byte[] PasswordSalt = Convert.FromBase64String(salt);
+                string password = passwordInput.Password;
 
-                rFile = rFile.Substring(0, rFile.Length - 3);
-
-                rFile += ",";
-
+                SaltHash = new string[] { salt, HashPassword(PasswordSalt, password) };
+                UserandPassword account = new UserandPassword(usernameInput.Text, SaltHash);
+                collectionAccount.InsertOne(account);
             }
-            catch (Exception)
-            {
-                using (File.CreateText(path))
-                    Console.WriteLine("OOP");
-                rFile = "[";
-            }
-
-            using (StreamWriter file = File.CreateText(path))
-            {
-                file.WriteLine(rFile + users + "]");
-            }
+            else
+                MessageBox.Show("Username and Password cannot be empty", "Invalid", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
+
 
 
         //Generates 24 bit random characters to append to the password before hashing

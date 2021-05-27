@@ -123,15 +123,16 @@ namespace PasswordManager
             Close();
         }
 
-
-        private void Copy_Paste(object Sender)
+        private void UserTextBlock_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            var item = LstEntries.SelectedItem;
 
-           
-            
+            var item = LstEntries;
+            item.
+
+            Clipboard.SetText(item);
 
         }
+
 
     }
 }
