@@ -50,7 +50,7 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="1">
-                    <StackPanel Height="289" >
+                    <StackPanel Height="290" >
                         <!--!The username entry-->
                         <!--x store the username-->
                         <TextBlock Text="Username" FontSize="15" 
@@ -69,9 +69,12 @@
                         <!--!The password entry-->
                         <!--xtodo store the password-->
                         <Border Style="{StaticResource txtBoxBord}" Margin="300,-30,300,10">
-                            <PasswordBox Style="{StaticResource passBox}"  x:Name="passwordInput"/>
-                        </Border>
-                        <TextBlock Text="Password" FontFamily="helvetica" FontSize="15"
+                            <Grid >
+                            <PasswordBox Style="{StaticResource passBox}" x:Name="passwordInput"/>
+                            <TextBox Style="{StaticResource txtBox}" x:Name="showpassInput"/>
+                            </Grid>
+                       </Border>
+                            <TextBlock Text="Password" FontFamily="helvetica" FontSize="15"
                            TextAlignment="Center" Width="104"
                                Margin="0,-90,0,0" Height="22" RenderTransformOrigin="0.513,1.362"/>
 
@@ -94,6 +97,16 @@
                             Click="signUpInfoBut_Click"
                             />
                         </Border>
+                        <Border Style="{StaticResource butBord}" Margin="500, -285, 220, 255" >
+                            <CheckBox x:Name="showPassBut"
+                            Content="Show"
+                            Foreground="Black"
+                            Background="#546480" 
+                            IsChecked="True" 
+                            Checked="showPassBut_Checked" Unchecked="showPassBut_Unchecked" 
+                            />
+                        </Border>
+
                     </StackPanel>
                 </StackPanel>
 

@@ -10,10 +10,13 @@ namespace PasswordManager
         public ObjectId Id { get; set; }
         [BsonElement("User")]
         public string User { get; set; }
+       
         [BsonElement("SaltHash")]
         public string[] SaltHash { get; set; }
         [BsonElement("Accounts")]
         public List<AccountEntry> Accounts { get; set; }
+
+
 
         public UserandPassword(string user, string[] salthash)
         {
