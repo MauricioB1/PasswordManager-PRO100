@@ -127,16 +127,20 @@ namespace PasswordManager
             }
         }
 
-        private void CheckBox_Changed(object sender, RoutedEventArgs e)
+
+        private void showPassBut_Checked(object sender, RoutedEventArgs e)
         {
-            if (showPassBut.IsChecked == true)
-            {
-                passwordInput.Visibility = System.Windows.Visibility.Visible;
-            }
-            else
-            {
-                passwordInput.Visibility = System.Windows.Visibility.Hidden;
-            }
+            showpassInput.Text = passwordInput.Password;
+            passwordInput.Visibility = Visibility.Collapsed;
+            showpassInput.Visibility = Visibility.Visible;
         }
+
+        private void showPassBut_Unchecked(object sender, RoutedEventArgs e)
+        {
+            passwordInput.Password = showpassInput.Text;
+            showpassInput.Visibility = Visibility.Collapsed;
+            passwordInput.Visibility = Visibility.Visible;
+        }
+
     }
 }
