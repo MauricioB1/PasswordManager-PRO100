@@ -123,16 +123,11 @@ namespace PasswordManager
             Close();
         }
 
-        private void UserTextBlock_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void LstEntries_CopyingRowClipboardContent(object sender, System.Windows.Controls.DataGridRowClipboardEventArgs e)
         {
-
-            var item = LstEntries;
-            item.
-
-            Clipboard.SetText(item);
-
+            var currentCell = e.ClipboardRowContent[LstEntries.CurrentCell.Column.DisplayIndex];
+            e.ClipboardRowContent.Clear();
+            e.ClipboardRowContent.Add(currentCell);
         }
-
-
     }
 }
