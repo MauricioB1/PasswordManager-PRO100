@@ -123,16 +123,45 @@ namespace PasswordManager
             Close();
         }
 
-        private void UserTextBlock_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void LstEntries_CopyingRowClipboardContent(object sender, System.Windows.Controls.DataGridRowClipboardEventArgs e)
         {
-
-            var item = LstEntries;
-            item.
-
-            Clipboard.SetText(item);
-
+            var currentCell = e.ClipboardRowContent[LstEntries.CurrentCell.Column.DisplayIndex];
+            e.ClipboardRowContent.Clear();
+            e.ClipboardRowContent.Add(currentCell);
         }
 
+        private void updateEntryBut_Click(object sender, RoutedEventArgs e)
+        {
+            UserName = usernameInput.Text;
+            Password = passwordInput.Text;
+            Url = urlInput.Text;
 
+            AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
+
+            LstEntries.Items.Remove(entry);
+            loggedInUser.Accounts.Remove(entry);
+
+            entry.AccountPassword = Password;
+            entry.AccountUrl = Url;
+            entry.AccountUserName = UserName;
+
+            LstEntries.Items.Add(entry);
+            loggedInUser.Accounts.Add(entry);
+
+            var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
+            collectionAccount.FindOneAndUpdate(
+                item => item.Id == loggedInUser.Id,
+                update);
+
+            UserName = null;
+            Password = null;
+            Url = null;
+
+            usernameInput.Text = "";
+            passwordInput.Text = "";
+            urlInput.Text = "";
+            //}
+
+        }
     }
 }
