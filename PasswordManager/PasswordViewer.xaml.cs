@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
+using System.Windows.Documents;
 using MongoDB.Driver;
 
 namespace PasswordManager
@@ -30,6 +32,23 @@ namespace PasswordManager
         public PasswordViewer()
         {
             InitializeComponent();
+        }
+
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            var destination = ((Hyperlink)e.OriginalSource).NavigateUri;
+            Trace.WriteLine("Browsing to " + destination);
+
+            using (Process browser = new Process())
+            {
+                browser.StartInfo = new ProcessStartInfo
+                {
+                    FileName = destination.ToString(),
+                    UseShellExecute = true,
+                    ErrorDialog = true
+                };
+                browser.Start();
+            }
         }
 
         private void addEntryBut_Click(object sender, RoutedEventArgs e)
