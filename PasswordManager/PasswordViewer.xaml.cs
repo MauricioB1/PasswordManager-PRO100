@@ -129,5 +129,39 @@ namespace PasswordManager
             e.ClipboardRowContent.Clear();
             e.ClipboardRowContent.Add(currentCell);
         }
+
+        private void updateEntryBut_Click(object sender, RoutedEventArgs e)
+        {
+            UserName = usernameInput.Text;
+            Password = passwordInput.Text;
+            Url = urlInput.Text;
+
+            AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
+
+            LstEntries.Items.Remove(entry);
+            loggedInUser.Accounts.Remove(entry);
+
+            entry.AccountPassword = Password;
+            entry.AccountUrl = Url;
+            entry.AccountUserName = UserName;
+
+            LstEntries.Items.Add(entry);
+            loggedInUser.Accounts.Add(entry);
+
+            var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
+            collectionAccount.FindOneAndUpdate(
+                item => item.Id == loggedInUser.Id,
+                update);
+
+            UserName = null;
+            Password = null;
+            Url = null;
+
+            usernameInput.Text = "";
+            passwordInput.Text = "";
+            urlInput.Text = "";
+            //}
+
+        }
     }
 }
