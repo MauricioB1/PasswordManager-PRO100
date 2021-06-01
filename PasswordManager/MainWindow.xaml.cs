@@ -42,11 +42,13 @@ namespace PasswordManager
             usernameInput.Clear();
             passwordInput.Clear();
         }
-      
-        private void signUpInfoBut_Click(object sender, RoutedEventArgs e)
+
+        private async void signUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Password;
+            int userInt = 0;
+            bool userBreak = true;
             if (!(string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) || string.IsNullOrWhiteSpace(UserName) || string.IsNullOrWhiteSpace(Password)))
             {
                 string salt = GenerateSalt();
@@ -55,14 +57,29 @@ namespace PasswordManager
 
                 SaltHash = new string[] { salt, HashPassword(PasswordSalt, password) };
                 UserandPassword account = new UserandPassword(UserName, SaltHash);
-                collectionAccount.InsertOne(account);
-                loginInfoBut_Click(sender, e);
+                var AccountsList = await collectionAccount.Find(_ => true).ToListAsync(); ;
+                while (userBreak)
+                {
+                    if (UserName.Equals(AccountsList[userInt].User))
+                    {
+                        MessageBox.Show("This username already exists", "Invalid Username", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        userBreak = false;
+                    }
+                    else if (userInt < AccountsList.Count - 1)
+                    {
+                        userInt++;
+                    }
+                    else
+                    {
+                        collectionAccount.InsertOne(account);
+                        loginInfoBut_Click(sender, e);
+                        userBreak = false;
+                    }
+                }
             }
             else
                 MessageBox.Show("Username and Password cannot be empty", "Invalid", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
-
-
 
         //Generates 24 bit random characters to append to the password before hashing
         private string GenerateSalt()

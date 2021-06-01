@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
+using System.Windows.Documents;
 using MongoDB.Driver;
 
 namespace PasswordManager
@@ -30,6 +32,23 @@ namespace PasswordManager
         public PasswordViewer()
         {
             InitializeComponent();
+        }
+
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            var destination = ((Hyperlink)e.OriginalSource).NavigateUri;
+            Trace.WriteLine("Browsing to " + destination);
+
+            using (Process browser = new Process())
+            {
+                browser.StartInfo = new ProcessStartInfo
+                {
+                    FileName = destination.ToString(),
+                    UseShellExecute = true,
+                    ErrorDialog = true
+                };
+                browser.Start();
+            }
         }
 
         private void addEntryBut_Click(object sender, RoutedEventArgs e)
@@ -130,5 +149,38 @@ namespace PasswordManager
             e.ClipboardRowContent.Add(currentCell);
         }
 
+        private void updateEntryBut_Click(object sender, RoutedEventArgs e)
+        {
+            UserName = usernameInput.Text;
+            Password = passwordInput.Text;
+            Url = urlInput.Text;
+
+            AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
+
+            LstEntries.Items.Remove(entry);
+            loggedInUser.Accounts.Remove(entry);
+
+            entry.AccountPassword = Password;
+            entry.AccountUrl = Url;
+            entry.AccountUserName = UserName;
+
+            LstEntries.Items.Add(entry);
+            loggedInUser.Accounts.Add(entry);
+
+            var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
+            collectionAccount.FindOneAndUpdate(
+                item => item.Id == loggedInUser.Id,
+                update);
+
+            UserName = null;
+            Password = null;
+            Url = null;
+
+            usernameInput.Text = "";
+            passwordInput.Text = "";
+            urlInput.Text = "";
+            //}
+
+        }
     }
 }
