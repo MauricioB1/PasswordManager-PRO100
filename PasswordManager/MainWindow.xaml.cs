@@ -9,20 +9,21 @@ namespace PasswordManager
     {
         #region Properties
 
+        //These are the properties that get stored into the database
         private string UserName { get; set; }
-
         private string Password { get; set; }
-
         private string[] SaltHash { get; set; }
 
-        static MongoClient client = new MongoClient();
-        static IMongoDatabase db = client.GetDatabase("passwordmanager");
-        static IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
+        //This establishes a connection to the database
+        static readonly MongoClient client = new();
+        static readonly IMongoDatabase db = client.GetDatabase("passwordmanager");
+        static readonly IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
 
+        //Parameters to create the salt and the hash
         private const int SaltByteSize = 24;
         private const int HashByteSize = 24;
         private const int HashingIteration = 10000;
-        private byte[] Salt = new byte[SaltByteSize];
+        private readonly byte[] Salt = new byte[SaltByteSize];
 
         #endregion Properties
 
@@ -32,11 +33,13 @@ namespace PasswordManager
             InitializeComponent();
         }
 
-        private void loginInfoBut_Click(object sender, RoutedEventArgs e)
+        //Takes the information provided by the user and logs in to a prexisting account if one is found with the same username and password
+        private void LoginInfoBut_Click(object sender, RoutedEventArgs e)
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Password;
             if (!(string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) || string.IsNullOrWhiteSpace(UserName) || string.IsNullOrWhiteSpace(Password)))
+                //After the check to see if there are no empty entries, it then goes to validate the password with the found user
                 ValidatePassword();
             else
                 MessageBox.Show("Username and Password cannot be empty","Invalid", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -45,7 +48,7 @@ namespace PasswordManager
             passwordInput.Clear();
         }
 
-        private async void signUpInfoBut_Click(object sender, RoutedEventArgs e)
+        private async void SignUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Password;
@@ -58,7 +61,7 @@ namespace PasswordManager
                 string password = Password;
 
                 SaltHash = new string[] { salt, HashPassword(PasswordSalt, password) };
-                UserandPassword account = new UserandPassword(UserName, SaltHash);
+                UserandPassword account = new(UserName, SaltHash);
                 var AccountsList = await collectionAccount.Find(_ => true).ToListAsync(); ;
                 while (userBreak)
                 {
@@ -74,7 +77,7 @@ namespace PasswordManager
                     else
                     {
                         collectionAccount.InsertOne(account);
-                        loginInfoBut_Click(sender, e);
+                        LoginInfoBut_Click(sender, e);
                         userBreak = false;
                     }
                 }
@@ -86,16 +89,16 @@ namespace PasswordManager
         //Generates 24 bit random characters to append to the password before hashing
         private string GenerateSalt()
         {
-            RNGCryptoServiceProvider saltGenerator = new RNGCryptoServiceProvider();
+            RNGCryptoServiceProvider saltGenerator = new();
             saltGenerator.GetBytes(Salt);
             return Convert.ToBase64String(Salt);
         }
 
         //Takes the generated salt and password and makes a 24 bit hash
-        private string HashPassword(byte[] Salt, string password)
+        private static string HashPassword(byte[] Salt, string password)
         {
-            Rfc2898DeriveBytes hashGenerator = new Rfc2898DeriveBytes(password, Salt);
-            hashGenerator.IterationCount = HashingIteration;
+            Rfc2898DeriveBytes hashGenerator = new(password, Salt) { IterationCount = HashingIteration };
+
             return Convert.ToBase64String(hashGenerator.GetBytes(HashByteSize));
         }
 
@@ -115,8 +118,7 @@ namespace PasswordManager
                     string HashedUserPass = HashPassword(salt, Password);
                     if (HashedUserPass.Equals(hash))
                     {
-                        PasswordViewer passwordviewer = new PasswordViewer();
-                        passwordviewer.loggedInUser = accounts[userInt];
+                        PasswordViewer passwordviewer = new() { LoggedInUser = accounts[userInt] };
 
                         foreach (var c in accounts[userInt].Accounts)
                         {
