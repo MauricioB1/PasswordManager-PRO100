@@ -2,7 +2,6 @@
 using System;
 using System.Windows;
 using System.Security.Cryptography;
-
 namespace PasswordManager
 {
     public partial class MainWindow : Window
@@ -147,5 +146,21 @@ namespace PasswordManager
                 }
             }
         }
+
+
+        private void showPassBut_Checked(object sender, RoutedEventArgs e)
+        {
+            showpassInput.Text = passwordInput.Password;
+            passwordInput.Visibility = Visibility.Collapsed;
+            showpassInput.Visibility = Visibility.Visible;
+        }
+
+        private void showPassBut_Unchecked(object sender, RoutedEventArgs e)
+        {
+            passwordInput.Password = showpassInput.Text;
+            showpassInput.Visibility = Visibility.Collapsed;
+            passwordInput.Visibility = Visibility.Visible;
+        }
+
     }
 }
