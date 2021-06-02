@@ -50,9 +50,7 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="1">
-                    <StackPanel Height="290" >
-                        <!--!The username entry-->
-                        <!--x store the username-->
+                    <StackPanel Height="289" >
                         <TextBlock Text="Username" FontSize="15" 
                             Margin="350 10 350 125"
                             TextAlignment="Center"
@@ -66,8 +64,6 @@
                             <TextBox Style="{StaticResource txtBox}" x:Name="usernameInput" />
 
                         </Border>
-                        <!--!The password entry-->
-                        <!--xtodo store the password-->
                         <Border Style="{StaticResource txtBoxBord}" Margin="300,-30,300,10">
                             <Grid >
                                 <TextBox Style="{StaticResource txtBox}" x:Name="showpassInput"/>
@@ -83,7 +79,7 @@
                             Content="Login"
                             Foreground="Black"
                             Background="#546480"
-                            Click="loginInfoBut_Click"
+                            Click="LoginInfoBut_Click"
                             BorderThickness="0"
                             IsDefault="true"
                             />
@@ -94,7 +90,7 @@
                             Content="Sign Up"
                             Foreground="Black"
                             Background="#546480"
-                            Click="signUpInfoBut_Click"
+                            Click="SignUpInfoBut_Click"
                             />
                         </Border>
                         <Border Style="{StaticResource butBord}" Margin="500, -285, 220, 255" >

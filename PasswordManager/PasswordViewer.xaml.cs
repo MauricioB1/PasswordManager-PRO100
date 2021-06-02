@@ -13,23 +13,21 @@ namespace PasswordManager
     {
         #region Properties
 
-        public User CurrUser { get; set; }
-
-        public List<User> UsersList = new List<User>();
-
-        public string Path { get; set; }
-
+        //Information that a user puts in an entry
         private string UserName { get; set; }
 
         private string Password { get; set; }
 
         private string Url { get; set; }
 
-        static MongoClient client = new MongoClient();
-        static IMongoDatabase db = client.GetDatabase("passwordmanager");
-        static IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
-        public UserandPassword loggedInUser { get; set; }
+        //Sets a connection to the database
+        static readonly MongoClient client = new();
+        static readonly IMongoDatabase db = client.GetDatabase("passwordmanager");
+        static readonly IMongoCollection<UserandPassword> collectionAccount = db.GetCollection<UserandPassword>("users");
+        public UserandPassword LoggedInUser { get; set; }
+
         #endregion Properties
+
         public PasswordViewer()
         {
             InitializeComponent();
@@ -86,10 +84,10 @@ namespace PasswordManager
             LstEntries.Items.Add(entry);
         }
 
-        private string GeneratePassword()
+        private static string GeneratePassword()
         {
-            Random random = new Random();
-            StringBuilder builder = new StringBuilder();
+            Random random = new();
+            StringBuilder builder = new();
             char ch;
             for (int i = 0; i < 16; i++)
             {
@@ -107,7 +105,7 @@ namespace PasswordManager
                         break;
                     case 2:
                         int RandNum = random.Next(0, 9);
-                        builder.Append(RandNum.ToString());
+                        builder.Append(RandNum);
                         break;
                     case 3:
                         char[] SymbolArray = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '{', '}', '[', ']' };
@@ -121,27 +119,27 @@ namespace PasswordManager
             return builder.ToString();
         }
 
-        private void generatePassBut_Click(object sender, RoutedEventArgs e)
+        private void GeneratePassBut_Click(object sender, RoutedEventArgs e)
         {
             passwordInput.Text = GeneratePassword();
         }
 
-        private void deleteEntryBut_Click(object sender, RoutedEventArgs e)
+        private void DeleteEntryBut_Click(object sender, RoutedEventArgs e)
         {
             AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
 
-            loggedInUser.Accounts.Remove(entry);
+            LoggedInUser.Accounts.Remove(entry);
 
-            var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
+            var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, LoggedInUser.Accounts);
             collectionAccount.FindOneAndUpdate(
-                item => item.Id == loggedInUser.Id,
+                item => item.Id == LoggedInUser.Id,
                 update);
             LstEntries.Items.Remove(entry);
         }
 
-        private void backbut_Click(object sender, RoutedEventArgs e)
+        private void Backbut_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
+            MainWindow mainWindow = new();
             mainWindow.Activate();
             mainWindow.Show();
             Close();
@@ -154,7 +152,7 @@ namespace PasswordManager
             e.ClipboardRowContent.Add(currentCell);
         }
 
-        private void updateEntryBut_Click(object sender, RoutedEventArgs e)
+        private void UpdateEntryBut_Click(object sender, RoutedEventArgs e)
         {
             UserName = usernameInput.Text;
             Password = passwordInput.Text;
@@ -162,29 +160,45 @@ namespace PasswordManager
 
             AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
 
-            LstEntries.Items.Remove(entry);
-            loggedInUser.Accounts.Remove(entry);
+            if (entry != null)
+            {
 
-            entry.AccountPassword = Password;
-            entry.AccountUrl = Url;
-            entry.AccountUserName = UserName;
+                LstEntries.Items.Remove(entry);
+                LoggedInUser.Accounts.Remove(entry);
 
-            LstEntries.Items.Add(entry);
-            loggedInUser.Accounts.Add(entry);
+                if (UserName.Trim() != "")
+                {
+                    entry.AccountUserName = UserName;
+                }
+                if (Password.Trim() != "")
+                {
+                    entry.AccountPassword = Password;
+                }
+                if (Url.Trim() != "")
+                {
+                    entry.AccountUrl = Url;
+                }
+            
 
-            var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
-            collectionAccount.FindOneAndUpdate(
-                item => item.Id == loggedInUser.Id,
-                update);
+                LstEntries.Items.Add(entry);
+                LoggedInUser.Accounts.Add(entry);
 
-            UserName = null;
-            Password = null;
-            Url = null;
+                var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, LoggedInUser.Accounts);
+                collectionAccount.FindOneAndUpdate(
+                    item => item.Id == LoggedInUser.Id,
+                    update);
 
-            usernameInput.Text = "";
-            passwordInput.Text = "";
-            urlInput.Text = "";
-            //}
+
+                UserName = null;
+                Password = null;
+                Url = null;
+
+                usernameInput.Text = "";
+                passwordInput.Text = "";
+                urlInput.Text = "";
+            }
+
+
 
         }
     }
