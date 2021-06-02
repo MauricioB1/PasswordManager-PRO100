@@ -70,8 +70,8 @@
                         <!--xtodo store the password-->
                         <Border Style="{StaticResource txtBoxBord}" Margin="300,-30,300,10">
                             <Grid >
-                            <PasswordBox Style="{StaticResource passBox}" x:Name="passwordInput"/>
-                            <TextBox Style="{StaticResource txtBox}" x:Name="showpassInput"/>
+                                <TextBox Style="{StaticResource txtBox}" x:Name="showpassInput"/>
+                                <PasswordBox Style="{StaticResource passBox}" x:Name="passwordInput"/>
                             </Grid>
                        </Border>
                             <TextBlock Text="Password" FontFamily="helvetica" FontSize="15"

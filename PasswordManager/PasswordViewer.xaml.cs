@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Documents;
 using MongoDB.Driver;
@@ -48,7 +49,7 @@ namespace PasswordManager
                     ErrorDialog = true
                 };
                 browser.Start();
-            }
+            } 
         }
 
         private void addEntryBut_Click(object sender, RoutedEventArgs e)
@@ -56,24 +57,28 @@ namespace PasswordManager
             UserName = usernameInput.Text;
             Password = passwordInput.Text;
             Url = urlInput.Text;
-
             if (UserName.Trim() != "" && Password.Trim() != "")
             {
-                loggedInUser.Accounts.Add(new AccountEntry(UserName, Password, Url));
-                var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
-                collectionAccount.FindOneAndUpdate(
-                    item => item.Id == loggedInUser.Id,
-                    update);
+                if (Uri.IsWellFormedUriString(Url, UriKind.RelativeOrAbsolute))
+                {
+                    loggedInUser.Accounts.Add(new AccountEntry(UserName, Password, Url));
+                    var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, loggedInUser.Accounts);
+                    collectionAccount.FindOneAndUpdate(
+                        item => item.Id == loggedInUser.Id,
+                        update);
 
-                LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
+                    LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
 
-                UserName = null;
-                Password = null;
-                Url = null;
+                    UserName = null;
+                    Password = null;
+                    Url = null;
 
-                usernameInput.Text = "";
-                passwordInput.Text = "";
-                urlInput.Text = "";
+                    usernameInput.Text = "";
+                    passwordInput.Text = "";
+                    urlInput.Text = "";
+                }
+                else
+                    MessageBox.Show("The URL entered is invalid", "Invalid URL", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         public void AddEntry(AccountEntry entry)
