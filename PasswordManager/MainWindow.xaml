@@ -66,8 +66,8 @@
                         </Border>
                         <Border Style="{StaticResource txtBoxBord}" Margin="300,-30,300,10">
                             <Grid >
-                            <PasswordBox Style="{StaticResource passBox}" x:Name="passwordInput"/>
                             <TextBox Style="{StaticResource txtBox}" x:Name="showpassInput"/>
+                            <PasswordBox Style="{StaticResource passBox}" x:Name="passwordInput"/>
                             </Grid>
                        </Border>
                             <TextBlock Text="Password" FontFamily="helvetica" FontSize="15"
@@ -99,7 +99,7 @@
                             Foreground="Black"
                             Background="#546480" 
                             IsChecked="True" 
-                            Checked="showPassBut_Checked" Unchecked="showPassBut_Unchecked" 
+                            Checked="ShowPassBut_Checked" Unchecked="ShowPassBut_Unchecked" 
                             />
                         </Border>
 

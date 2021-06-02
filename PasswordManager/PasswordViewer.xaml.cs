@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
@@ -37,7 +36,7 @@ namespace PasswordManager
             var destination = ((Hyperlink)e.OriginalSource).NavigateUri;
             Trace.WriteLine("Browsing to " + destination);
 
-            using (Process browser = new Process())
+            using (Process browser = new())
             {
                 browser.StartInfo = new ProcessStartInfo
                 {
@@ -49,47 +48,52 @@ namespace PasswordManager
             }
         }
 
-        private void addEntryBut_Click(object sender, RoutedEventArgs e)
+        private void AddEntryBut_Click(object sender, RoutedEventArgs e)
         {
+            //Grabs the text the user put in into the entry boxes
             UserName = usernameInput.Text;
             Password = passwordInput.Text;
             Url = urlInput.Text;
 
             if (UserName.Trim() != "" && Password.Trim() != "")
             {
+                //It adds that entry to the logged in user and updates the database with the new information
                 LoggedInUser.Accounts.Add(new AccountEntry(UserName, Password, Url));
                 var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, LoggedInUser.Accounts);
                 collectionAccount.FindOneAndUpdate(
                     item => item.Id == LoggedInUser.Id,
                     update);
 
+                //displays it visually
                 LstEntries.Items.Add(new AccountEntry(UserName, Password, Url));
 
+                //resets the values of the class properties
                 UserName = null;
                 Password = null;
                 Url = null;
 
+                //Clears the entry fields
                 usernameInput.Text = "";
                 passwordInput.Text = "";
                 urlInput.Text = "";
             }
         }
-        public void AddEntry(AccountEntry entry)
-        {
-            LstEntries.Items.Add(entry);
-        }
 
+        //Creates a 16 character length string that has random characters
         private static string GeneratePassword()
         {
             Random random = new();
             StringBuilder builder = new();
             char ch;
+
             for (int i = 0; i < 16; i++)
             {
+                //Randomly chooses to insert a letter, number, or special character
                 int randomNum = random.Next(1, 4);
                 switch (randomNum)
                 {
                     case 1:
+                        //Randomly chooses a letter and whether it's even or not will make it either lowercase or uppercase
                         ch = (char)random.Next('A', 'Z');
                         if (i % 2 == 1)
                         {
@@ -114,6 +118,7 @@ namespace PasswordManager
             return builder.ToString();
         }
 
+        //Generates a random password when you click this button
         private void GeneratePassBut_Click(object sender, RoutedEventArgs e)
         {
             passwordInput.Text = GeneratePassword();
@@ -121,17 +126,21 @@ namespace PasswordManager
 
         private void DeleteEntryBut_Click(object sender, RoutedEventArgs e)
         {
+            //Stores the information of the currently selected cell
             AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
 
+            //Removes it from the logged in user and updates the database
             LoggedInUser.Accounts.Remove(entry);
-
             var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, LoggedInUser.Accounts);
             collectionAccount.FindOneAndUpdate(
                 item => item.Id == LoggedInUser.Id,
                 update);
+
+            //Removes it from the screen
             LstEntries.Items.Remove(entry);
         }
 
+        //Goes back to the previous window.
         private void Backbut_Click(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow = new();
@@ -140,50 +149,52 @@ namespace PasswordManager
             Close();
         }
 
+        
         private void LstEntries_CopyingRowClipboardContent(object sender, System.Windows.Controls.DataGridRowClipboardEventArgs e)
         {
+            //It stores the contents of the current cell.
             var currentCell = e.ClipboardRowContent[LstEntries.CurrentCell.Column.DisplayIndex];
+            //Clears the clipboard so that there is no old data in there.
             e.ClipboardRowContent.Clear();
+            //Adds the selected cell to the clipboard
             e.ClipboardRowContent.Add(currentCell);
         }
 
         private void UpdateEntryBut_Click(object sender, RoutedEventArgs e)
         {
+            //Grabs the text that the user put in in the entries
             UserName = usernameInput.Text;
             Password = passwordInput.Text;
             Url = urlInput.Text;
 
+            //Stores the currently selected entry
             AccountEntry entry = (AccountEntry)LstEntries.SelectedItem;
 
             if (entry != null)
             {
-
+                //Removes that entry ffrom the screen and logged in user
                 LstEntries.Items.Remove(entry);
                 LoggedInUser.Accounts.Remove(entry);
 
-                if (UserName.Trim() != "")
-                {
-                    entry.AccountUserName = UserName;
-                }
-                if (Password.Trim() != "")
-                {
-                    entry.AccountPassword = Password;
-                }
-                if (Url.Trim() != "")
-                {
-                    entry.AccountUrl = Url;
-                }
-            
+                //Updates the values of entry to the user inputted values.
+                //If the entry is empty, then it doesn't change it
+                if (UserName.Trim() != "") { entry.AccountUserName = UserName; }
 
+                if (Password.Trim() != "") { entry.AccountPassword = Password; }
+
+                if (Url.Trim() != "") { entry.AccountUrl = Url; }
+            
+                //It adds the newly modified entry to the screen and logged in uesr
                 LstEntries.Items.Add(entry);
                 LoggedInUser.Accounts.Add(entry);
 
+                //Updates the database with the new information
                 var update = Builders<UserandPassword>.Update.Set(o => o.Accounts, LoggedInUser.Accounts);
                 collectionAccount.FindOneAndUpdate(
                     item => item.Id == LoggedInUser.Id,
                     update);
 
-
+                //Resets the class properties and clears the entry boxes
                 UserName = null;
                 Password = null;
                 Url = null;
@@ -192,9 +203,6 @@ namespace PasswordManager
                 passwordInput.Text = "";
                 urlInput.Text = "";
             }
-
-
-
         }
     }
 }

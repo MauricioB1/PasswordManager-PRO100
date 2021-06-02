@@ -35,8 +35,13 @@ namespace PasswordManager
         //Takes the information provided by the user and logs in to a prexisting account if one is found with the same username and password
         private void LoginInfoBut_Click(object sender, RoutedEventArgs e)
         {
+            //Grabs the information that user passed in
             UserName = usernameInput.Text;
-            Password = passwordInput.Password;
+
+            if (passwordInput.Password.Equals("")) { Password = showpassInput.Text; }
+
+            else { Password = passwordInput.Password; }
+
             if (!(string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password) || string.IsNullOrWhiteSpace(UserName) || string.IsNullOrWhiteSpace(Password)))
                 //After the check to see if there are no empty entries, it then goes to validate the password with the found user
                 ValidatePassword();
@@ -47,6 +52,7 @@ namespace PasswordManager
             passwordInput.Clear();
         }
 
+        //Creates a new user, using the information provided
         private async void SignUpInfoBut_Click(object sender, RoutedEventArgs e)
         {
             UserName = usernameInput.Text;
@@ -104,7 +110,11 @@ namespace PasswordManager
         private async void ValidatePassword()
         {
             UserName = usernameInput.Text;
-            Password = passwordInput.Password;
+
+            if (passwordInput.Password.Equals("")) { Password = showpassInput.Text; }
+
+            else { Password = passwordInput.Password; }
+
             int userInt = 0;
             bool userBreak = true;
             var accounts = await collectionAccount.Find(_ => true).ToListAsync();
@@ -148,14 +158,14 @@ namespace PasswordManager
         }
 
 
-        private void showPassBut_Checked(object sender, RoutedEventArgs e)
+        private void ShowPassBut_Checked(object sender, RoutedEventArgs e)
         {
             showpassInput.Text = passwordInput.Password;
             passwordInput.Visibility = Visibility.Collapsed;
             showpassInput.Visibility = Visibility.Visible;
         }
 
-        private void showPassBut_Unchecked(object sender, RoutedEventArgs e)
+        private void ShowPassBut_Unchecked(object sender, RoutedEventArgs e)
         {
             passwordInput.Password = showpassInput.Text;
             showpassInput.Visibility = Visibility.Collapsed;
