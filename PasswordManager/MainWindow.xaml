@@ -5,8 +5,117 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PasswordManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Pasword Manager"
+        Height="450" Width="800"
+        MaxHeight="450" MaxWidth="800"
+        MinHeight="450" MinWidth="800"
+        >
+    <Window.Resources>
+        <Style TargetType="Border" x:Key="txtBoxBord">
+            <Setter Property="BorderBrush" Value="Purple"/>
+            <Setter Property="BorderThickness" Value="3"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Padding" Value="1"/>
+        </Style>
+        <Style TargetType="Border" x:Key="butBord">
+            <Setter Property="BorderBrush" Value="Purple"/>
+            <Setter Property="BorderThickness" Value="5"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Background" Value="#546480"/>
+        </Style>
 
+        <Style TargetType="TextBox" x:Key="txtBox">
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="helvetica"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style TargetType="PasswordBox" x:Key="passBox">
+            <Setter Property="Margin" Value="1"/>
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="helvetica"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+    </Window.Resources>
+    
+    <Grid Background="#778eb5">
+        <Border BorderThickness="2" BorderBrush="Purple">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="1">
+                    <StackPanel Height="289" >
+                        <TextBlock Text="Username" FontSize="15" 
+                            Margin="350 10 350 125"
+                            TextAlignment="Center"
+                            FontFamily="helvetica"/>
+
+                        <Border
+                            Style="{StaticResource txtBoxBord}"
+                            Margin="300,-120,300,100" 
+                            Padding="1">
+
+                            <TextBox Style="{StaticResource txtBox}" x:Name="usernameInput" />
+
+                        </Border>
+                        <Border Style="{StaticResource txtBoxBord}" Margin="300,-30,300,10">
+                            <Grid >
+                                <TextBox Style="{StaticResource txtBox}" x:Name="showpassInput"/>
+                                <PasswordBox Style="{StaticResource passBox}" x:Name="passwordInput"/>
+                            </Grid>
+                       </Border>
+                            <TextBlock Text="Password" FontFamily="helvetica" FontSize="15"
+                           TextAlignment="Center" Width="104"
+                               Margin="0,-90,0,0" Height="22" RenderTransformOrigin="0.513,1.362"/>
+
+                        <Border Style="{StaticResource butBord}" Margin="350 10 350 160">
+                        <Button x:Name="loginInfoBut"
+                            Content="Login"
+                            Foreground="Black"
+                            Background="#546480"
+                            Click="LoginInfoBut_Click"
+                            BorderThickness="0"
+                            IsDefault="true"
+                            />
+                        </Border>
+                        <Border Style="{StaticResource butBord}" Margin="350 -150 350 170" >
+                            
+                        <Button x:Name="signUpInfoBut"
+                            Content="Sign Up"
+                            Foreground="Black"
+                            Background="#546480"
+                            Click="SignUpInfoBut_Click"
+                            />
+                        </Border>
+                        <Border Style="{StaticResource butBord}" Margin="500, -285, 220, 255" >
+                            <CheckBox x:Name="showPassBut"
+                            Content="Show"
+                            Foreground="Black"
+                            Background="#546480" 
+                            IsChecked="True" 
+                            Checked="showPassBut_Checked" Unchecked="showPassBut_Unchecked" 
+                            />
+                        </Border>
+
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Image Source="Images/lock.jpg" Width="85" Margin="10"/>
+                    <TextBlock VerticalAlignment="Center" 
+                       Text="Password Manager"
+                       FontFamily="helvetica"
+                               FontWeight="Bold"
+                       FontSize="24"
+                           Margin="0,-5,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
