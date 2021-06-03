@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Documents;
 using MongoDB.Driver;
@@ -45,7 +46,7 @@ namespace PasswordManager
                     ErrorDialog = true
                 };
                 browser.Start();
-            }
+            } 
         }
 
         private void AddEntryBut_Click(object sender, RoutedEventArgs e)
@@ -54,7 +55,6 @@ namespace PasswordManager
             UserName = usernameInput.Text;
             Password = passwordInput.Text;
             Url = urlInput.Text;
-
             if (UserName.Trim() != "" && Password.Trim() != "")
             {
                 //It adds that entry to the logged in user and updates the database with the new information
